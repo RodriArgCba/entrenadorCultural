@@ -1,6 +1,6 @@
 import kivy.app
 kivy.require('1.11.1')
-from view.MenuPrincipal import MenuPrincipal
+from view.menuprincipal import MenuPrincipal
 
 
 
