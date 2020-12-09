@@ -12,16 +12,13 @@ class Conversacion(object):
         self.duracion = duracion
         self.ubicacionmp3 = ubicacionmp3
         self.__fases = []
-        if (culturaobjetivo is None) or isinstance(culturaobjetivo,CulturaObjetivo):
-            self.__culturaobjetivo = culturaobjetivo
-        else:
-            raise Exception("El elemento no es una CulturaObjetivo")
+        self.culturaobjetivo = culturaobjetivo
 
     def _get_nombre(self):
         return self.__nombre
 
     def _set_nombre(self, value):
-        if not isinstance(value, string):
+        if not isinstance(value, str):
             raise TypeError("nombre debe ser un string")
         self.__nombre = value
 
@@ -29,8 +26,8 @@ class Conversacion(object):
         return self.__descripcion
 
     def _set_descripcion(self, value):
-        if not isinstance(value, string):
-            raise TypeError("nombre debe ser un string")
+        if not isinstance(value, str):
+            raise TypeError("descripcion debe ser un string")
         self.__descripcion = value
 
     def _get_duracion(self):
@@ -45,7 +42,7 @@ class Conversacion(object):
         return self.__ubicacionmp3
 
     def _set_ubicacionmp3(self, value):
-        if not isinstance(value, string):
+        if not isinstance(value, str):
             raise TypeError("ubicacionmp3 debe ser un string")
         self.__ubicacionmp3 = value
 
@@ -65,13 +62,13 @@ class Conversacion(object):
         return copy.deepcopy(self.__culturaobjetivo)
 
     def _set_culturaobjetivo(self, value):
-        if isinstance(value, CulturaObjetivo):
-            self.__fases.append(value)
+        if isinstance(value, CulturaObjetivo) or (value is None):
+            self.__culturaobjetivo = value
         else:
             raise Exception("El elemento no es una CulturaObjetivo")
 
     nombre = property(_get_nombre, _set_nombre)
-    descripcion = property(_get_nombre, _set_nombre)
+    descripcion = property(_get_descripcion, _set_descripcion)
     duracion = property(_get_duracion, _set_duracion)
     ubicacionmp3 = property(_get_ubicacionmp3, _set_ubicacionmp3)
     culturaobjetivo = property(_get_culturaobjetivo, _set_culturaobjetivo)

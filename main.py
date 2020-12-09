@@ -1,4 +1,7 @@
 import kivy.app
+
+from model.fase import Fase
+
 kivy.require('1.11.1')
 from view.menuprincipal import MenuPrincipal
 
@@ -12,4 +15,5 @@ class EntrenadorCulturalApp(App):
         return MenuPrincipal()
 
 if __name__ == '__main__':
+    fase = Fase('lala','lele','lolo',5.0)
     EntrenadorCulturalApp().run()

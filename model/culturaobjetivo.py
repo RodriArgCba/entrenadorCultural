@@ -1,4 +1,3 @@
-import string
 from model.interpretacion import Interpretacion
 import copy
 
@@ -13,7 +12,7 @@ class CulturaObjetivo(object):
         return self.__nombre
 
     def _set_nombre(self, value):
-        if not isinstance(value, string):
+        if not isinstance(value, str):
             raise TypeError("nombre debe ser un string")
         self.__nombre = value
 
@@ -21,7 +20,7 @@ class CulturaObjetivo(object):
         return self.__descripcion
 
     def _set_descripcion(self, value):
-        if not isinstance(value, string):
+        if not isinstance(value, str):
             raise TypeError("descripcion debe ser un string")
         self.__descripcion = value
 

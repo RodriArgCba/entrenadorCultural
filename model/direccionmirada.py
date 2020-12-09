@@ -2,4 +2,9 @@ from enum import Enum
 
 
 class DireccionMirada(Enum):
-    DEFAULT = 0
+    NOAPLICA = 0
+    SUELO = 1
+    OJOS = 2
+    ARRIBA = 3
+    ENMOVIMIENTOCONSTANTE = 4
+    ENOTRAPARTEDELCUERPO = 5
