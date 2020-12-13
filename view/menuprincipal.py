@@ -1,21 +1,46 @@
+from kivy.app import App
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.screenmanager import Screen
+
+from view.simulacionscreen import SimulacionScreen
 from view.widgetsmethods import WidgetCreator
 from kivy.core.window import Window
-from kivy.utils import get_color_from_hex as getColor
+from kivy.utils import get_color_from_hex as getcolor
 from kivy.graphics import Color, Rectangle
-from kivy.config import Config
 
 backgroundColor = '6A3192'
-subdivisionColor = [0.58,0.337,0.639]
-padding = [75,0,75,0]
+subdivisionColor = [0.58, 0.337, 0.639]
+padding = [45, 0, 45, 10]
 
-class MenuPrincipal(BoxLayout):
+
+def callback_volver(instance):
+    print("Boton volver")
+
+
+def callback_historial(instance):
+    print("Boton historial")
+
+
+def callback_iniciarconversacion(instance):
+    print("Boton Simulacion")
+    app = App.get_running_app()
+    app.root.add_widget(SimulacionScreen(name="simulacion"))
+    app.root.current='simulacion'
+
+
+class MenuPrincipal(Screen):
     def __init__(self, **kwargs):
         super(MenuPrincipal, self).__init__(**kwargs)
-        Window.clearcolor = getColor(backgroundColor)
-        Window.size = (800,600)
+        self.add_widget(MenuPrincipalLayout())
+
+
+class MenuPrincipalLayout(BoxLayout):
+    def __init__(self, **kwargs):
+        super(MenuPrincipalLayout, self).__init__(**kwargs)
+        Window.clearcolor = getcolor(backgroundColor)
+        Window.size = (800, 600)
         Window.minimum_width, Window.minimum_height = Window.size
         self.orientation = 'vertical'
         self.padding = padding
@@ -32,9 +57,30 @@ class MenuPrincipal(BoxLayout):
         )
         self.add_widget(self.conversación)
         self.add_widget(WidgetCreator.newlabel('Estado Sensores:'))
-        self.add_widget(EstadoSensores())
-        #Llenar pantalla hacia abajo
-        self.add_widget(Label(size_hint=(1.0,1.0)))
+        self.add_widget(EstadoSensores(
+            height=176,
+            size_hint_y=None
+        ))
+        # Llenar pantalla hacia abajo
+        self.add_widget(Label(size_hint=(1.0, 1.0)))
+        self.add_widget(LowerButtonsRow())
+
+
+
+class LowerButtonsRow(BoxLayout):
+    def __init__(self, **kwargs):
+        super(LowerButtonsRow, self).__init__(**kwargs)
+        self.orientation = 'horizontal'
+        btn1 = WidgetCreator.newbutton("Iniciar conversación")
+        btn1.bind(on_press=callback_iniciarconversacion)
+        btn2 = WidgetCreator.newbutton("Historial")
+        btn2.bind(on_press=callback_historial)
+        btn3 = WidgetCreator.newbutton("Volver")
+        btn3.bind(on_press=callback_volver)
+        self.add_widget(btn1)
+        self.add_widget(btn2)
+        self.add_widget(btn3)
+
 
 class EstadoSensores(GridLayout):
     def __init__(self, **kwargs):
@@ -54,7 +100,7 @@ class EstadoSensores(GridLayout):
         self.add_widget(WidgetCreator.newicon("assets/green-emotion-smile.png"))
         grid = self
         with grid.canvas.before:
-            Color(subdivisionColor[0],subdivisionColor[1],subdivisionColor[2])
+            Color(subdivisionColor[0], subdivisionColor[1], subdivisionColor[2])
             self.rect = Rectangle(size=grid.size, pos=grid.pos)
 
         def update_rect(instance, value):
@@ -63,5 +109,4 @@ class EstadoSensores(GridLayout):
 
         # listen to size and position changes
         self.bind(pos=update_rect, size=update_rect)
-
-
+        print(self.rect)

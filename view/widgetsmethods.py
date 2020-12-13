@@ -4,6 +4,7 @@ from kivy.utils import get_color_from_hex as getcolor
 from kivy.factory import Factory
 from kivy.uix.image import Image
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
 
 textColor = 'ffffff'
 spinnerBackColor = 'af7ead'
@@ -64,3 +65,14 @@ class WidgetCreator:
         )
         image.add_widget(Image(source=source))
         return image
+
+    def newbutton(text):
+        button = Button(
+            height=44,
+            size_hint=(0.7, None),
+            text=text,
+            halign='center',
+            valign='middle',
+        )
+        button.bind(size=button.setter('text_size'))
+        return button
