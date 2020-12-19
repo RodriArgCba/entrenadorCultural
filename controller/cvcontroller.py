@@ -1,7 +1,7 @@
 import threading
 import cv2
+import numpy as np
 from kivy.graphics.texture import Texture
-
 
 class CamaraController(object):
     
@@ -13,7 +13,8 @@ class CamaraController(object):
                 if cls._instance is None:
                     print('Creating the object')
                     cls._instance = super(CamaraController, cls).__new__(cls)
-                    cls._instance.net = cv2.dnn.readNetFromTensorflow("graph_opt.pb")
+                    cls._instance.net = cv2.dnn.readNetFromTensorflow("assets/graph_opt.pb")
+                    #cls._instance.facemodel = face_recognition.load_model("./emotion_detector_models/model.hdf5")
                     cls._instance.inWidth = 200
                     cls._instance.inHeight = 200
                     cls._instance.thr = 0.2
@@ -53,6 +54,11 @@ def updateimage():
             return
         frameWidth = frame.shape[1]
         frameHeight = frame.shape[0]
+#        face_locations = face_recognition.face_locations(frame)
+#        top, right, bottom, left = face_locations[0]
+ #       face_image = frame[top:bottom, left:right]
+  #      predicted_class = np.argmax(camaracontroller.facemodel.predict(face_image))
+   #     print(predicted_class)
         camaracontroller.net.setInput(
             cv2.dnn.blobFromImage(frame, 1.0, (camaracontroller.inWidth, camaracontroller.inHeight), (127.5, 127.5, 127.5), swapRB=True, crop=False))
         out = camaracontroller.net.forward()

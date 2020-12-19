@@ -4,6 +4,7 @@ from model.conversacion import Conversacion
 from model.culturaobjetivo import CulturaObjetivo
 from view.menuprincipal import MenuPrincipal
 from kivy.app import App
+import face_recognition
 
 kivy.require('1.11.1')
 

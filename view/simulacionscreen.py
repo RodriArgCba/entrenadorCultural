@@ -1,21 +1,13 @@
-import copy
-import _thread
 import threading
-import logging
-import time
 
-import cv2
-from kivy.cache import Cache
 from kivy.clock import Clock
 from kivy.core.image import Texture
 from kivy.uix.image import Image
-from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import Screen
 from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
-import pylab
 
-from controller.audiocontroller import AudioController, updatesound
+from controller.audiocontroller import AudioController, updatesound, contarpalabras
 from controller.cvcontroller import CamaraController, updateimage
 from view.widgetsmethods import WidgetCreator
 
@@ -45,6 +37,8 @@ class SimulacionScreenLayout(BoxLayout):
         self.threadcamara.start()
         self.threadsonido = threading.Thread(target=updatesound, args=(), daemon=True)
         self.threadsonido.start()
+        self.threadcontadorpalabras = threading.Thread(target=contarpalabras, args=(), daemon=True)
+        self.threadcontadorpalabras.start()
         Clock.schedule_interval(self.update, 1.0 / 60.0)
 
     def update(self,dt):

@@ -3,6 +3,46 @@ import pyaudio
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
+import speech_recognition as sr
+import logging
+import time
+
+
+class ContadorDePalabras(object):
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            with threading.Lock():
+                if cls._instance is None:
+                    print('Creating the object')
+                    cls._instance = super(ContadorDePalabras, cls).__new__(cls)
+                    cls._instance.recognizer = sr.Recognizer()
+                    cls._instance.microphone = sr.Microphone()
+                    cls._instance.nrocaptura = 0
+                    cls._instance.acumulado = 0
+        return cls._instance
+
+    def resetearcuenta(self):
+        self.nrocaptura = 0
+        self.acumulado = 0
+
+
+def contarpalabras():
+    contador = ContadorDePalabras()
+    with contador.microphone as source:
+        while(True):
+            ti = time.time()
+            audio = contador.recognizer.listen(source)
+            duracion = time.time() - ti
+            try:
+                texto = contador.recognizer.recognize_google(audio, language='es')
+                contador.nrocaptura = contador.nrocaptura + 1
+                contador.acumulado = contador.acumulado + (len(texto.split(" "))/duracion)
+                logging.info(texto)
+                logging.info(len(texto.split(" "))/duracion)
+            except:
+                print("No pasa nada")
 
 
 class AudioController(object):
