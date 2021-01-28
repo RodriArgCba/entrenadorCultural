@@ -66,6 +66,15 @@ class WidgetCreator:
         image.add_widget(Image(source=source))
         return image
 
+    @staticmethod
+    def newimage(source,size=(0.4,1)) -> Image:
+        image = BoxLayout(
+            size_hint=size
+        )
+        image.add_widget(Image(source=source))
+        return image
+
+    @staticmethod
     def newbutton(text):
         button = Button(
             height=44,

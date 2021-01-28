@@ -70,6 +70,8 @@ class AudioController(object):
                     cls._instance.line = cls._instance.ax.plot(data)[0]
                     cls._instance.ax.grid()
                     cls._instance.ax.axis(cls._instance.lenght)
+                    cls._instance.ax.set_yticklabels([])
+                    cls._instance.ax.set_xticklabels([])
         return cls._instance
 
 
@@ -78,3 +80,4 @@ def updatesound():
     while (True):
         data = np.fromstring(audiocontroller.stream.read(audiocontroller.CHUNK), dtype=np.int16)
         audiocontroller.line.set_ydata(data)
+        #time.wait(0.05)

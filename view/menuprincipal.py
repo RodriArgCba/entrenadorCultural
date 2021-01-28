@@ -3,8 +3,6 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import Screen
-
-from view.simulacionscreen import SimulacionScreen
 from view.widgetsmethods import WidgetCreator
 from kivy.core.window import Window
 from kivy.utils import get_color_from_hex as getcolor
@@ -25,9 +23,8 @@ def callback_historial(instance):
 
 def callback_iniciarconversacion(instance):
     print("Boton Simulacion")
-    app = App.get_running_app()
-    app.root.add_widget(SimulacionScreen(name="simulacion"))
-    app.root.current='simulacion'
+    from controller.controladorprincipal import ControladorPrincipal
+    ControladorPrincipal().iniciarsimulacion()
 
 
 class MenuPrincipal(Screen):
@@ -109,4 +106,4 @@ class EstadoSensores(GridLayout):
 
         # listen to size and position changes
         self.bind(pos=update_rect, size=update_rect)
-        print(self.rect)
+        #print(self.rect)
