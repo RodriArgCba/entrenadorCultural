@@ -1,5 +1,6 @@
 from controller.controladorprincipal import ControladorPrincipal, EntrenadorCulturalApp
 
+controladorprincipal = ControladorPrincipal()
+
 if __name__ == '__main__':
-    ControladorPrincipal()
-    EntrenadorCulturalApp().run()
+    EntrenadorCulturalApp(controladorprincipal).run()

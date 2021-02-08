@@ -1,5 +1,3 @@
-import string
-
 from model.culturaobjetivo import CulturaObjetivo
 from model.fase import Fase
 import copy

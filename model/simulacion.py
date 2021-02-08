@@ -24,7 +24,7 @@ class Simulacion(object):
         return self.__conversacion
 
     def _set_conversacion(self, value):
-        if (not isinstance(value, Conversacion)) or (not (value is None)):
+        if (not isinstance(value, Conversacion)) and (not (value is None)):
             raise TypeError("conversacion debe ser una Conversacion")
         self.__conversacion = value
 

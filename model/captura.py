@@ -27,8 +27,8 @@ class Captura(object):
     def _set_volumendevoz(self, value):
         if not isinstance(value, float):
             raise TypeError("volumendevoz debe ser un punto flotante")
-        self.__volumendevoz = value 
-        
+        self.__volumendevoz = value
+
     def _get_palabrasporsegundo(self):
         return self.__palabrasporsegundo
 
@@ -41,7 +41,7 @@ class Captura(object):
         return self.__posicionbrazos
 
     def _set_posicionbrazos(self, value):
-        if isinstance(value,PosicionBrazos):
+        if isinstance(value, PosicionBrazos):
             self.__posicionbrazos = value
         else:
             raise TypeError("posicionbrazos debe ser miembro del enum PosicionBrrazos")
@@ -73,9 +73,30 @@ class Captura(object):
         else:
             raise TypeError("cabeza debe ser miembro del enum MovimientoCabeza")
 
-    volumendevoz = property(_get_volumendevoz,_set_volumendevoz)
-    palabrasporsegundo = property(_get_palabrasporsegundo,_set_palabrasporsegundo)
-    posicionbrazos = property(_get_posicionbrazos,_set_posicionbrazos)
-    mirada = property(_get_mirada,_set_mirada)
-    rostro = property(_get_rostro,_set_rostro)
-    cabeza = property(_get_cabeza,_set_cabeza)
+    volumendevoz = property(_get_volumendevoz, _set_volumendevoz)
+    palabrasporsegundo = property(_get_palabrasporsegundo, _set_palabrasporsegundo)
+    posicionbrazos = property(_get_posicionbrazos, _set_posicionbrazos)
+    mirada = property(_get_mirada, _set_mirada)
+    rostro = property(_get_rostro, _set_rostro)
+    cabeza = property(_get_cabeza, _set_cabeza)
+
+    def comparar(self, captura):
+        # Comparando volúmen de voz
+        if not ((self.volumendevoz - 1) <= captura.volumendevoz <= (self.volumendevoz - 1)):
+            return False
+        # Comparando velocidad del hábla
+        if not ((self.palabrasporsegundo - 0.5) <= captura.palabrasporsegundo <= (self.palabrasporsegundo + 0.5)):
+            return False
+        # Comparando posición de brazos
+        if not ((self.posicionbrazos == PosicionBrazos.NOAPLICA) or (self.posicionbrazos == captura.posicionbrazos)):
+            return False
+        # Comparando dirección de la mirada
+        if not ((self.mirada == DireccionMirada.NOAPLICA) or (self.mirada == captura.mirada)):
+            return False
+        # Comparando rostro
+        if not ((self.rostro == Rostro.NOAPLICA) or (self.rostro == captura.rostro)):
+            return False
+        # Comparando movimiento de la cabeza
+        if not ((self.cabeza == MovimientoCabeza.NOAPLICA) or (self.cabeza == captura.cabeza)):
+            return False
+        return True

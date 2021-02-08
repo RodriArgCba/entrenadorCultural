@@ -1,7 +1,6 @@
 import threading
 import pyaudio
 import numpy as np
-import matplotlib
 import matplotlib.pyplot as plt
 import speech_recognition as sr
 import logging

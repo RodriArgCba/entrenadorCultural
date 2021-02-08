@@ -4,12 +4,13 @@ from model.captura import Captura
 
 
 class Fase(object):
-    def __init__(self, nombre='', tema='', inicio=0.0, duracion=0.0, capturaesperada=None):
+    def __init__(self, nombre='', tema='', inicio=0.0, duracion=0.0, texto='', capturaesperada=None):
         self.nombre = nombre
         self.tema = tema
         self.inicio = inicio
         self.duracion = duracion
         self.capturaesperada = capturaesperada
+        self.texto = texto
 
     def _get_nombre(self):
         return self.__nombre
@@ -52,8 +53,17 @@ class Fase(object):
         else:
             raise Exception("El elemento no es una Captura")
 
+    def _get_texto(self):
+        return self.__texto
+
+    def _set_texto(self, value):
+        if not isinstance(value, str):
+            raise TypeError("texto debe ser un string")
+        self.__texto = value
+
     nombre = property(_get_nombre, _set_nombre)
     tema = property(_get_tema, _set_tema)
     duracion = property(_get_duracion, _set_duracion)
     inicio = property(_get_inicio, _set_inicio)
     capturaesperada = property(_get_capturaesperada, _set_capturaesperada)
+    texto = property(_get_texto, _set_texto)

@@ -55,9 +55,10 @@ CREATE TABLE IF NOT EXISTS Fases (
 	FaseId INTEGER PRIMARY KEY,
    	Nombre TEXT NOT NULL,
 	Tema TEXT NOT NULL,
-	CapturaEsperadaId INTEGER NOT NULL,
 	TiempoInicio NUMERIC(100,40) NOT NULL,
 	Duracion NUMERIC(100,40) NOT NULL,
+	Texto TEXT NOT NULL,
+	CapturaEsperadaId INTEGER NOT NULL,
 	ConversacionId INTEGER NOT NULL,
 	FOREIGN KEY (CapturaEsperadaId) 
       REFERENCES Capturas (CapturaId) 
@@ -125,6 +126,6 @@ INSERT INTO Interpretaciones VALUES(1,1,"Considerado y dispuesto","lalalala",1);
 INSERT INTO Interpretaciones VALUES(2,2,"Sumiso y servicial","lalalala",1);
 
 
-INSERT INTO Fases VALUES(1,"Saludo","Primer contacto",1,0.0,1.0,1);
-INSERT INTO Fases VALUES(2,"Preseentacion","Consideración y sumisión.",2,1.0,2.0,1);
+INSERT INTO Fases VALUES(1,"Saludo","Primer contacto",0.0,1.0,"¡Buenas tardes! ¿Como se encuentra usted hoy?",1,1);
+INSERT INTO Fases VALUES(2,"Preseentacion","Consideración y sumisión.",1.0,2.0,"Cuénteme un poco de usted por favor",2,1);
 

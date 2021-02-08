@@ -37,5 +37,11 @@ class CulturaObjetivo(object):
             raise Exception("El elemento no es una interpretación")
 
     nombre = property(_get_nombre, _set_nombre)
-    descripcion = property(_get_nombre, _set_nombre)
+    descripcion = property(_get_descripcion, _set_descripcion)
     interpretaciones = property(_get_interpretaciones, _set_interpretaciones)
+
+    def interpretar(self,captura):
+        for interpretacion in self.interpretaciones:
+            if interpretacion.captura.comparar(captura):
+                return interpretacion
+        raise Exception("No se encontraron coincidencias")
