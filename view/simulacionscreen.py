@@ -24,23 +24,24 @@ padding = [75, 0, 75, 0]
 
 
 class SimulacionScreen(Screen):
-    def __init__(self, controladorprincipal, **kwargs):
+    def __init__(self, **kwargs):
         super(SimulacionScreen, self).__init__(**kwargs)
-        self.add_widget(SimulacionScreenLayout(controladorprincipal))
+        self.add_widget(SimulacionScreenLayout())
 
 
 class SimulacionScreenLayout(BoxLayout):
-    def __init__(self, controladorprincipal, **kwargs):
+    def __init__(self, **kwargs):
         super(SimulacionScreenLayout, self).__init__(**kwargs)
-        self.controladorprincipal = controladorprincipal
-        self.faseactual = next(controladorprincipal.iteradordefase)
+        from controller.controladorprincipal import ControladorPrincipal
+        self.faseactual = next(ControladorPrincipal().iteradordefase)
         self.orientation = 'vertical'
         self.faselabel = WidgetCreator.newlabel(self.faseactual.nombre)
         self.add_widget(self.faselabel)
-        self.chatbox = BoxLayout(orientation="horizontal", size_hint=(1, 1))
-        self.chatbox.add_widget(WidgetCreator.newimage('assets/customer-service-woman-16112201.jpg'))
-        self.chatbox.add_widget(ChatBox(self.faseactual, size_hint=(1, 1)))
-        self.add_widget(self.chatbox)
+        chat = BoxLayout(orientation="horizontal", size_hint=(1, 1))
+        chat.add_widget(WidgetCreator.newimage('assets/customer-service-woman-16112201.jpg'))
+        self.chatbox = ChatBox(self.faseactual, size_hint=(1, 1))
+        chat.add_widget(self.chatbox)
+        self.add_widget(chat)
         self.camara = Image(size_hint=(1, None), pos_hint={'top': 1})
         self.soundwave = FigureCanvasKivyAgg(AudioController().fig)
         self.add_widget(UserInputBox(self.camara, self.soundwave))

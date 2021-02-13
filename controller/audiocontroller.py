@@ -39,6 +39,8 @@ def contarpalabras():
                 contador.nrocaptura = contador.nrocaptura + 1
                 contador.acumulado = contador.acumulado + (len(texto.split(" "))/duracion)
                 logging.info(texto)
+                from controller.controladorprincipal import ControladorPrincipal
+                ControladorPrincipal().printtochatbox(texto)
                 logging.info(len(texto.split(" "))/duracion)
             except:
                 print("No pasa nada")

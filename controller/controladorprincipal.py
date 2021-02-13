@@ -46,7 +46,7 @@ class ControladorPrincipal(object):
             self.threadgestos.start()
             self.iteradordefase = iter(self.conversacionseleccionada.fases)
             app = App.get_running_app()
-            pantallasimulacion = SimulacionScreen(self, name="simulacion")
+            pantallasimulacion = SimulacionScreen(name="simulacion")
             app.root.add_widget(pantallasimulacion)
             app.root.current = 'simulacion'
             self.simulacion.conversacion = self.conversacionseleccionada
@@ -67,6 +67,10 @@ class ControladorPrincipal(object):
 
     def nuevaconversacion(self):
         pass
+
+    def printtochatbox(self, texto):
+        var = ScreenManager().children[0]
+        print(var)
 
 
 class EntrenadorCulturalApp(App):
