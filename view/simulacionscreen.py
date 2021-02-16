@@ -1,19 +1,14 @@
-import threading
-
 from kivy.clock import Clock
 from kivy.core.image import Texture
-from kivy.uix.gridlayout import GridLayout
 from kivy.uix.image import Image
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import Screen
 from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 from kivy.uix.scrollview import ScrollView
 from kivy.graphics import Color, Rectangle
-
-from view.widgetsmethods import WidgetCreator
-
-from controller.audiocontroller import AudioController, updatesound, contarpalabras
-from controller.cvcontroller import CamaraController, updateimage, updategesture
+from model.fase import Fase
+from controller.audiocontroller import AudioController
+from controller.cvcontroller import CamaraController
 from view.widgetsmethods import WidgetCreator
 
 camaracontroller = CamaraController()
@@ -26,29 +21,48 @@ padding = [75, 0, 75, 0]
 class SimulacionScreen(Screen):
     def __init__(self, **kwargs):
         super(SimulacionScreen, self).__init__(**kwargs)
-        self.add_widget(SimulacionScreenLayout())
+        self.layout = SimulacionScreenLayout()
+        self.add_widget(self.layout)
+
+    def establecerfase(self, fase: Fase):
+        self.layout.faselabel.text = fase.nombre
+        self.layout.chatbox.content.add_widget(WidgetCreator.newlabel(fase.texto))
+
+    def imprimiralchatbox(self,texto):
+        self.layout.chatbox.content.add_widget(WidgetCreator.newlabel(texto,'bottom','right'))
 
 
 class SimulacionScreenLayout(BoxLayout):
     def __init__(self, **kwargs):
         super(SimulacionScreenLayout, self).__init__(**kwargs)
-        from controller.controladorprincipal import ControladorPrincipal
-        self.faseactual = next(ControladorPrincipal().iteradordefase)
         self.orientation = 'vertical'
-        self.faselabel = WidgetCreator.newlabel(self.faseactual.nombre)
+        self.faselabel = WidgetCreator.newlabel("Nombre de Fase")
         self.add_widget(self.faselabel)
         chat = BoxLayout(orientation="horizontal", size_hint=(1, 1))
-        chat.add_widget(WidgetCreator.newimage('assets/customer-service-woman-16112201.jpg'))
-        self.chatbox = ChatBox(self.faseactual, size_hint=(1, 1))
+        chat.add_widget(WidgetCreator.newimage('assets/BotFace.jpg'))
+        self.chatbox = ChatBox(size_hint=(1, 1))
         chat.add_widget(self.chatbox)
         self.add_widget(chat)
         self.camara = Image(size_hint=(1, None), pos_hint={'top': 1})
         self.soundwave = FigureCanvasKivyAgg(AudioController().fig)
-        self.add_widget(UserInputBox(self.camara, self.soundwave))
+        self.userinputbox = UserInputBox(self.camara, self.soundwave)
+        self.add_widget(self.userinputbox)
         Clock.schedule_interval(self.update, 1.0 / 30.0)
 
     def update(self, dt):
-        buf = camaracontroller.capturepose()
+        pose = camaracontroller.capturepose()
+        self.userinputbox.poselabel.text = "Brazos: " + pose.name
+        rostro = camaracontroller.capturegesture()
+        self.userinputbox.rostrolabel.text = "Rostro: " + rostro.name
+        if rostro.value == 1:
+            self.userinputbox.rostroimage.source = "assets/Sonriendo.png"
+        elif rostro.value == 2:
+            self.userinputbox.rostroimage.source = "assets/Serio.png"
+        elif rostro.value == 3:
+            self.userinputbox.rostroimage.source = "assets/Irritado.png"
+        elif rostro.value == 4:
+            self.userinputbox.rostroimage.source = "assets/Preocupado.png"
+        buf = camaracontroller.captureposeimage()
         self.soundwave.draw()
         if buf is not False:
             texture1 = Texture.create(size=(640, 480), colorfmt='bgr')
@@ -57,12 +71,11 @@ class SimulacionScreenLayout(BoxLayout):
 
 
 class ChatBox(ScrollView):
-    def __init__(self, faseactual, **kwargs):
+    def __init__(self, **kwargs):
         super(ChatBox, self).__init__(**kwargs)
         self.do_scroll_x = False
         self.do_scroll_y = True
         self.content = BoxLayout(size_hint_y=None, orientation='vertical')
-        self.content.add_widget(WidgetCreator.newlabel(faseactual.texto))
         self.content.bind(minimum_height=self.content.setter('height'))
         with self.canvas.before:
             Color(subdivisionColor[0], subdivisionColor[1], subdivisionColor[2])
@@ -96,7 +109,8 @@ class UserInputBox(BoxLayout):
         rightupbox.add_widget(Image(source="assets/Camara.png", size_hint=(0.1, None), pos_hint={'top': 1}))
         rightupbox.add_widget(camara)
         rightbox.add_widget(rightupbox)
-        rightbox.add_widget(WidgetCreator.newlabel("Brazos: Extendidos"))
+        self.poselabel = WidgetCreator.newlabel("Brazos: NULL")
+        rightbox.add_widget(self.poselabel)
         self.add_widget(rightbox)
         leftbox = BoxLayout(orientation='vertical')
         leftupbox = BoxLayout(orientation='horizontal')
@@ -104,7 +118,9 @@ class UserInputBox(BoxLayout):
         leftupbox.add_widget(soundwave)
         leftbox.add_widget(leftupbox)
         leftdownbox = BoxLayout(orientation='horizontal')
-        leftdownbox.add_widget(Image(source="assets/green-emotion-smile.png", size_hint=(0.1, 1)))
-        leftdownbox.add_widget(WidgetCreator.newlabel("Sonriendo"))
+        self.rostroimage = Image(source="assets/Serio.png", size_hint=(0.1, 1))
+        leftdownbox.add_widget(self.rostroimage)
+        self.rostrolabel = WidgetCreator.newlabel("SERIO")
+        leftdownbox.add_widget(self.rostrolabel)
         leftbox.add_widget(leftdownbox)
         self.add_widget(leftbox)

@@ -17,18 +17,17 @@ conversaciones: List[Any] = []
 
 
 class MenuPrincipal(Screen):
-    def __init__(self, controladorprincipal, **kwargs):
+    def __init__(self, **kwargs):
         super(MenuPrincipal, self).__init__(**kwargs)
-        self.add_widget(MenuPrincipalLayout(controladorprincipal))
+        self.add_widget(MenuPrincipalLayout())
 
 
 class MenuPrincipalLayout(BoxLayout):
-    def __init__(self, controladorprincipal, **kwargs):
+    def __init__(self, **kwargs):
         super(MenuPrincipalLayout, self).__init__(**kwargs)
         Window.clearcolor = getcolor(backgroundColor)
         Window.size = (800, 600)
         Window.minimum_width, Window.minimum_height = Window.size
-        self.controladorprincipal = controladorprincipal
         self.orientation = 'vertical'
         self.padding = padding
         self.add_widget(WidgetCreator.newlabel('Cultura Objetivo:'))
@@ -56,7 +55,7 @@ class MenuPrincipalLayout(BoxLayout):
         ))
         # Llenar pantalla hacia abajo
         self.add_widget(Label(size_hint=(1.0, 1.0)))
-        self.add_widget(LowerButtonsRow(controladorprincipal))
+        self.add_widget(LowerButtonsRow())
 
     def callback_spinner_culturas(self, obj, value):
         cultura = None
@@ -72,7 +71,8 @@ class MenuPrincipalLayout(BoxLayout):
                 values.append(x.nombre)
             self.conversación.values = values
             self.conversación.disabled = False
-            self.controladorprincipal.culturaseleccionada = cultura
+            from controller.controladorprincipal import ControladorPrincipal
+            ControladorPrincipal().culturaseleccionada = cultura
         else:
             raise Exception("Valor de cultura incorrecto")
 
@@ -84,15 +84,15 @@ class MenuPrincipalLayout(BoxLayout):
                 conversacion = x
                 break;
         if conversacion is not None:
-            self.controladorprincipal.conversacionseleccionada = conversacion
+            from controller.controladorprincipal import ControladorPrincipal
+            ControladorPrincipal().conversacionseleccionada = conversacion
         else:
             raise Exception("Valor de conversacion incorrecto")
 
 
 class LowerButtonsRow(BoxLayout):
-    def __init__(self, controladorprincipal, **kwargs):
+    def __init__(self, **kwargs):
         super(LowerButtonsRow, self).__init__(**kwargs)
-        self.controladorprincipal = controladorprincipal
         self.orientation = 'horizontal'
         btn1 = WidgetCreator.newbutton("Iniciar conversación")
         btn1.bind(on_press=self.callback_iniciarconversacion)
@@ -112,7 +112,8 @@ class LowerButtonsRow(BoxLayout):
 
     def callback_iniciarconversacion(self, obj):
         print("Boton Simulacion")
-        self.controladorprincipal.iniciarsimulacion()
+        from controller.controladorprincipal import ControladorPrincipal
+        ControladorPrincipal().iniciarsimulacion()
 
 
 class EstadoSensores(GridLayout):
@@ -121,16 +122,16 @@ class EstadoSensores(GridLayout):
         self.cols = 3
         self.add_widget(WidgetCreator.newlabel('Cámara:', 'middle'))
         self.add_widget(WidgetCreator.newicon("assets/Camara.png"))
-        self.add_widget(WidgetCreator.newicon("assets/green-emotion-smile.png"))
+        self.add_widget(WidgetCreator.newicon("assets/Sonriendo.png"))
         self.add_widget(WidgetCreator.newlabel('Micrófono:', 'middle'))
         self.add_widget(WidgetCreator.newicon("assets/Camara.png"))
-        self.add_widget(WidgetCreator.newicon("assets/green-emotion-smile.png"))
+        self.add_widget(WidgetCreator.newicon("assets/Sonriendo.png"))
         self.add_widget(WidgetCreator.newlabel('Casco de Realidad Virtual:', 'middle'))
         self.add_widget(WidgetCreator.newicon("assets/Camara.png"))
-        self.add_widget(WidgetCreator.newicon("assets/green-emotion-smile.png"))
+        self.add_widget(WidgetCreator.newicon("assets/Sonriendo.png"))
         self.add_widget(WidgetCreator.newlabel('Sensor Ocular:', 'middle'))
         self.add_widget(WidgetCreator.newicon("assets/Camara.png"))
-        self.add_widget(WidgetCreator.newicon("assets/green-emotion-smile.png"))
+        self.add_widget(WidgetCreator.newicon("assets/Sonriendo.png"))
         grid = self
         with grid.canvas.before:
             Color(subdivisionColor[0], subdivisionColor[1], subdivisionColor[2])

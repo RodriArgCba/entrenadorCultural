@@ -26,11 +26,11 @@ class CustomSpinnerOption(SpinnerOption):
 class WidgetCreator:
 
     @staticmethod
-    def newlabel(innertext, valign='bottom'):
+    def newlabel(innertext, valign='bottom', halign='left'):
         label = Label(
             text='[color=' + textColor + ']' + innertext + '[/color]',
             size_hint=(1.0, None),
-            halign='left',
+            halign=halign,
             valign=valign,
             markup=True
         )

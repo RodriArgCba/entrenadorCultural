@@ -1,12 +1,15 @@
 import threading
 import time
-
+import math
 import cv2
 import face_recognition
 import numpy as np
 from kivy.graphics.texture import Texture
 from keras.models import load_model
 
+from model.posicionbrazos import PosicionBrazos
+from model.rostro import Rostro
+from customlibs.segmentsdistance import distanciaentrelineas
 
 class CamaraController(object):
     _instance = None
@@ -19,8 +22,8 @@ class CamaraController(object):
                     cls._instance = super(CamaraController, cls).__new__(cls)
                     cls._instance.net = cv2.dnn.readNetFromTensorflow("assets/graph_opt.pb")
                     cls._instance.facemodel = load_model("./assets/model_v6_23.hdf5")
-                    cls._instance.inWidth = 200
-                    cls._instance.inHeight = 200
+                    cls._instance.inWidth = 250
+                    cls._instance.inHeight = 250
                     cls._instance.thr = 0.2
                     cls._instance.BODY_PARTS = {"Nose": 0, "Neck": 1, "RShoulder": 2, "RElbow": 3, "RWrist": 4,
                                                 "LShoulder": 5, "LElbow": 6, "LWrist": 7, "RHip": 8, "RKnee": 9,
@@ -34,7 +37,8 @@ class CamaraController(object):
                                                 ["LHip", "LKnee"], ["LKnee", "LAnkle"], ["Neck", "Nose"],
                                                 ["Nose", "REye"],
                                                 ["REye", "REar"], ["Nose", "LEye"], ["LEye", "LEar"]]
-                    cls._instance.gesture = "Neutral"
+                    cls._instance.gesture = Rostro.NOAPLICA
+                    cls._instance.pose = PosicionBrazos.NOAPLICA
                     cls._instance.cap = cv2.VideoCapture(2)
                     if not cls._instance.cap.isOpened():
                         cls._instance.cap = cv2.VideoCapture(0)
@@ -43,22 +47,28 @@ class CamaraController(object):
                     cls._instance.cap.set(cv2.CAP_PROP_FPS, 60)
         return cls._instance
 
-    def capturepose(self) -> Texture:
+    def captureposeimage(self) -> Texture:
         if hasattr(self, 'last_texture'):
             return self.last_texture
         else:
             return False
 
     def capturegesture(self):
-        if hasattr(self, 'last_texture'):
+        if hasattr(self, 'gesture'):
             return self.gesture
+        else:
+            return False
+
+    def capturepose(self):
+        if hasattr(self, 'pose'):
+            return self.pose
         else:
             return False
 
 
 def updategesture():
     camaracontroller = CamaraController()
-    emotion_dict = {'Angry': 0, 'Sad': 5, 'Neutral': 4, 'Disgust': 1, 'Surprise': 6, 'Fear': 2, 'Happy': 3}
+    emotion_dict = {0: Rostro.IRRITADO, 5: Rostro.PREOCUPADO, 4: Rostro.SERIO, 1: Rostro.IRRITADO, 6: Rostro.SONRIENDO, 2: Rostro.PREOCUPADO, 3: Rostro.SONRIENDO}
     while (True):
         hasFrame, frame = camaracontroller.cap.read()
         if not hasFrame:
@@ -72,7 +82,7 @@ def updategesture():
             face_image = np.reshape(face_image, [1, face_image.shape[0], face_image.shape[1], 1])
             prediction = camaracontroller.facemodel.predict(face_image)
             predicted_class = np.argmax(prediction)
-            label_map = dict((v, k) for k, v in emotion_dict.items())
+            label_map = dict((v, k) for v, k in emotion_dict.items())
             predicted_label = label_map[predicted_class]
             camaracontroller.gesture = predicted_label
             print(predicted_label)
@@ -81,6 +91,7 @@ def updategesture():
 
 def updateimage():
     camaracontroller = CamaraController()
+    ti = time.time()
     while (True):
         hasFrame, frame = camaracontroller.cap.read()
         if not hasFrame:
@@ -109,6 +120,37 @@ def updateimage():
             # Add a point if it's confidence is higher than threshold.
             points.append((int(x), int(y)) if conf > camaracontroller.thr else None)
 
+        #Aquí va el código para determinar la posición del cuerpo
+        munecaderecha = points[camaracontroller.BODY_PARTS['RWrist']]
+        munecaizquierda = points[camaracontroller.BODY_PARTS['LWrist']]
+        cododerecho = points[camaracontroller.BODY_PARTS['RElbow']]
+        codoizquierdo = points[camaracontroller.BODY_PARTS['LElbow']]
+        hombroderecho = points[camaracontroller.BODY_PARTS['RShoulder']]
+        cuello = points[camaracontroller.BODY_PARTS['Neck']]
+        if ((munecaderecha is None) or (munecaizquierda is None) or
+            (cododerecho is None) or (codoizquierdo is None) or
+            (hombroderecho is None) or (cuello is None)):
+                if (time.time() - ti) > 15:
+                    camaracontroller.pose = PosicionBrazos.TRASLAESPALDA
+                    ti = time.time()
+        else:
+            distanciabrazos = distanciaentrelineas(munecaderecha, cododerecho, munecaizquierda, codoizquierdo)
+            distanciahombrocuello = math.sqrt((cuello[0]-hombroderecho[0])**2+(cuello[1]-hombroderecho[1])**2)
+            ratio = (distanciabrazos / distanciahombrocuello)
+            if ratio > 3.5:
+                camaracontroller.pose = PosicionBrazos.EXTENDIDOS
+                ti = time.time()
+            elif ratio < 2:
+                camaracontroller.pose = PosicionBrazos.CRUZADOS
+                ti = time.time()
+            else:
+                camaracontroller.pose = PosicionBrazos.NEUTRALES
+                ti = time.time()
+            print("Distancia entre brazos:")
+            print(distanciabrazos)
+            print("Distancia hombro cuello:")
+            print(distanciahombrocuello)
+        #Aquí comienza el código para dibujar los puntos y lineas en la imàgen
         for pair in camaracontroller.POSE_PAIRS:
             partFrom = pair[0]
             partTo = pair[1]
