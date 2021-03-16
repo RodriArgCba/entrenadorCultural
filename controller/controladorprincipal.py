@@ -1,5 +1,4 @@
 import threading
-import time
 import kivy
 from kivy.uix.screenmanager import ScreenManager
 from controller.audiocontroller import updatesound, contarpalabras, AudioController, ContadorDePalabras
@@ -13,6 +12,8 @@ from model.movimientocabeza import MovimientoCabeza
 from model.simulacion import Simulacion
 from view.menuprincipal import MenuPrincipal
 from kivy.app import App
+
+from view.resultadoscreen import ResultadoScreen
 from view.simulacionscreen import SimulacionScreen
 from view.widgetsmethods import WidgetCreator
 
@@ -50,10 +51,13 @@ class ControladorPrincipal(object):
             self.faseactual = next(self.iteradordefase)
             self.pantallasimulacion = SimulacionScreen(name="simulacion")
             self.pantallasimulacion.establecerfase(self.faseactual)
+            CamaraController().killthread = False
             self.threadcamara.start()
-            self.threadsonido.start()
-            self.threadcontadorpalabras.start()
             self.threadgestos.start()
+            AudioController().killthread = False
+            self.threadsonido.start()
+            ContadorDePalabras().killthread = False
+            self.threadcontadorpalabras.start()
             app = App.get_running_app()
             app.root.add_widget(self.pantallasimulacion)
             app.root.current = 'simulacion'
@@ -72,13 +76,19 @@ class ControladorPrincipal(object):
         captura.posicionbrazos = camaracontroller.capturepose()
         captura.mirada = DireccionMirada.OJOS
         captura.cabeza = MovimientoCabeza.QUIETA
-        Simulacion.resultados = LineaResultado(self.faseactual, captura)
+        self.simulacion.resultados = LineaResultado(self.faseactual, captura)
         try:
             self.faseactual = next(self.iteradordefase)
+            self.pantallasimulacion.establecerfase(self.faseactual)
         except:
             self.finalizarsimulacion()
-        self.pantallasimulacion.establecerfase(self.faseactual)
 
+    def interpretarcapturas(self):
+        resultados = self.simulacion.resultados
+        for linearesultado in resultados:
+            linearesultado.interpretacion = self.culturaseleccionada.interpretar(linearesultado.captura)
+        self.simulacion.limpiarresultados()
+        self.simulacion.resultados = resultados
 
     def verhistorialusuario(self):
         pass
@@ -97,12 +107,18 @@ class ControladorPrincipal(object):
         self.avanzarfase()
 
     def finalizarsimulacion(self):
-        pass
+        CamaraController().killthread = True
+        AudioController().killthread = True
+        ContadorDePalabras().killthread = True
+        self.interpretarcapturas()
+        app = App.get_running_app()
+        app.root.add_widget(ResultadoScreen(self.simulacion, name="resultado"))
+        app.root.current = 'resultado'
 
 
 
 class EntrenadorCulturalApp(App):
-    def __init__(self, controladorprincipal, **kwargs):
+    def __init__(self, **kwargs):
         super(EntrenadorCulturalApp, self).__init__(**kwargs)
 
     def build(self):

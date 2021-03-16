@@ -54,3 +54,6 @@ class Simulacion(object):
     calificaciondeusuario = property(_get_calificaciondeusuario,_set_calificaciondeusuario)
     conversacion = property(_get_conversacion,_set_conversacion)
     fecha = property(_get_fecha,_set_fecha)
+
+    def limpiarresultados(self):
+        self.__resultados = []

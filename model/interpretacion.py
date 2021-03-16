@@ -6,7 +6,7 @@ from model.captura import Captura
 class Interpretacion(object):
     def __init__(self, lectura='', masinfo='', captura=None):
         self.lectura = lectura
-        self.masInfo = masinfo
+        self.masinfo = masinfo
         self.captura = captura
 
     def _get_lectura(self):

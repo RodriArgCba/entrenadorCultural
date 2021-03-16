@@ -45,6 +45,7 @@ class CamaraController(object):
                     if not cls._instance.cap.isOpened():
                         raise IOError("No se puede acceder a la webcam")
                     cls._instance.cap.set(cv2.CAP_PROP_FPS, 60)
+                    cls.killthread = True
         return cls._instance
 
     def captureposeimage(self) -> Texture:
@@ -69,7 +70,7 @@ class CamaraController(object):
 def updategesture():
     camaracontroller = CamaraController()
     emotion_dict = {0: Rostro.IRRITADO, 5: Rostro.PREOCUPADO, 4: Rostro.SERIO, 1: Rostro.IRRITADO, 6: Rostro.SONRIENDO, 2: Rostro.PREOCUPADO, 3: Rostro.SONRIENDO}
-    while (True):
+    while (not camaracontroller.killthread):
         hasFrame, frame = camaracontroller.cap.read()
         if not hasFrame:
             return
@@ -92,7 +93,7 @@ def updategesture():
 def updateimage():
     camaracontroller = CamaraController()
     ti = time.time()
-    while (True):
+    while (not camaracontroller.killthread):
         hasFrame, frame = camaracontroller.cap.read()
         if not hasFrame:
             return

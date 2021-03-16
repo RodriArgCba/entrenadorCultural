@@ -82,7 +82,7 @@ class Captura(object):
 
     def comparar(self, captura):
         # Comparando volúmen de voz
-        if not ((self.volumendevoz - 1) <= captura.volumendevoz <= (self.volumendevoz - 1)):
+        if not ((self.volumendevoz - 300) <= captura.volumendevoz <= (self.volumendevoz + 300)):
             return False
         # Comparando velocidad del hábla
         if not ((self.palabrasporsegundo - 0.5) <= captura.palabrasporsegundo <= (self.palabrasporsegundo + 0.5)):

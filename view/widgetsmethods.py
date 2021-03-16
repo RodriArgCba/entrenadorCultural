@@ -26,13 +26,11 @@ class CustomSpinnerOption(SpinnerOption):
 class WidgetCreator:
 
     @staticmethod
-    def newlabel(innertext, valign='bottom', halign='left'):
+    def newlabel(innertext, **kwargs):
         label = Label(
             text='[color=' + textColor + ']' + innertext + '[/color]',
-            size_hint=(1.0, None),
-            halign=halign,
-            valign=valign,
-            markup=True
+            markup=True,
+            **kwargs
         )
         label.height = 44
         label.bind(size=label.setter('text_size'))

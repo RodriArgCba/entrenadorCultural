@@ -30,7 +30,7 @@ class MenuPrincipalLayout(BoxLayout):
         Window.minimum_width, Window.minimum_height = Window.size
         self.orientation = 'vertical'
         self.padding = padding
-        self.add_widget(WidgetCreator.newlabel('Cultura Objetivo:'))
+        self.add_widget(WidgetCreator.newlabel('Cultura Objetivo:', size_hint=(1.0, None)))
         values = []
         for x in culturas:
             values.append(x.nombre)
@@ -40,7 +40,7 @@ class MenuPrincipalLayout(BoxLayout):
         )
         self.culturaObjetivo.bind(text=self.callback_spinner_culturas)
         self.add_widget(self.culturaObjetivo)
-        self.add_widget(WidgetCreator.newlabel('Conversación:'))
+        self.add_widget(WidgetCreator.newlabel('Conversación:', size_hint=(1.0, None)))
         self.conversación = WidgetCreator.newspinner(
             'Elija la conversación a simular...',
             ()
@@ -48,7 +48,7 @@ class MenuPrincipalLayout(BoxLayout):
         self.conversación.bind(text=self.callback_spinner_conversaciones)
         self.conversación.disabled = True
         self.add_widget(self.conversación)
-        self.add_widget(WidgetCreator.newlabel('Estado Sensores:'))
+        self.add_widget(WidgetCreator.newlabel('Estado Sensores:', size_hint=(1.0, None)))
         self.add_widget(EstadoSensores(
             height=176,
             size_hint_y=None
@@ -120,16 +120,16 @@ class EstadoSensores(GridLayout):
     def __init__(self, **kwargs):
         super(EstadoSensores, self).__init__(**kwargs)
         self.cols = 3
-        self.add_widget(WidgetCreator.newlabel('Cámara:', 'middle'))
+        self.add_widget(WidgetCreator.newlabel('Cámara:', valign='middle', size_hint=(1.0, None)))
         self.add_widget(WidgetCreator.newicon("assets/Camara.png"))
         self.add_widget(WidgetCreator.newicon("assets/Sonriendo.png"))
-        self.add_widget(WidgetCreator.newlabel('Micrófono:', 'middle'))
+        self.add_widget(WidgetCreator.newlabel('Micrófono:', valign='middle', size_hint=(1.0, None)))
         self.add_widget(WidgetCreator.newicon("assets/Camara.png"))
         self.add_widget(WidgetCreator.newicon("assets/Sonriendo.png"))
-        self.add_widget(WidgetCreator.newlabel('Casco de Realidad Virtual:', 'middle'))
+        self.add_widget(WidgetCreator.newlabel('Casco de Realidad Virtual:', valign='middle', size_hint=(1.0, None)))
         self.add_widget(WidgetCreator.newicon("assets/Camara.png"))
         self.add_widget(WidgetCreator.newicon("assets/Sonriendo.png"))
-        self.add_widget(WidgetCreator.newlabel('Sensor Ocular:', 'middle'))
+        self.add_widget(WidgetCreator.newlabel('Sensor Ocular:', valign='middle', size_hint=(1.0, None)))
         self.add_widget(WidgetCreator.newicon("assets/Camara.png"))
         self.add_widget(WidgetCreator.newicon("assets/Sonriendo.png"))
         grid = self

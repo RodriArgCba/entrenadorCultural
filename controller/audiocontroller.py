@@ -22,6 +22,7 @@ class ContadorDePalabras(object):
                     cls._instance.nrocaptura = 0
                     cls._instance.acumulado = 0
                     cls._instance.duracionacumulada = 0
+                    cls._instance.killthread = True
         return cls._instance
 
     def resetearcuenta(self):
@@ -32,20 +33,20 @@ class ContadorDePalabras(object):
 def contarpalabras():
     contador = ContadorDePalabras()
     with contador.microphone as source:
-        while(True):
+        while (not contador.killthread):
             ti = time.time()
             audio = contador.recognizer.listen(source)
             duracion = time.time() - ti
             try:
                 texto = contador.recognizer.recognize_google(audio, language='es')
                 contador.nrocaptura = contador.nrocaptura + 1
-                contador.acumulado = contador.acumulado + (len(texto.split(" "))/duracion)
+                contador.acumulado = contador.acumulado + (len(texto.split(" ")) / duracion)
                 contador.duracionacumulada = contador.duracionacumulada + duracion
                 logging.info(texto)
                 from controller.controladorprincipal import ControladorPrincipal
                 ControladorPrincipal().printtochatbox(texto)
-                logging.info(len(texto.split(" "))/duracion)
-            except:
+                logging.info(len(texto.split(" ")) / duracion)
+            except sr.UnknownValueError:
                 print("No pasa nada")
 
 
@@ -78,19 +79,20 @@ class AudioController(object):
                     cls._instance.ax.axis(cls._instance.lenght)
                     cls._instance.ax.set_yticklabels([])
                     cls._instance.ax.set_xticklabels([])
+                    cls._instance.killthread = True
         return cls._instance
 
 
 def updatesound():
     audiocontroller = AudioController()
     i = 0
-    while (True):
+    while (not audiocontroller.killthread):
         rawdata = audiocontroller.stream.read(audiocontroller.CHUNK)
-        volumen = audioop.rms(rawdata,2)
+        volumen = audioop.rms(rawdata, 2)
         if volumen > 0:
             i = i + 1
             audiocontroller.volumenacumulado = audiocontroller.volumenacumulado + volumen
-            audiocontroller.volumenpromedio = audiocontroller.volumenacumulado/i
+            audiocontroller.volumenpromedio = audiocontroller.volumenacumulado / i
         data = np.fromstring(rawdata, dtype=np.int16)
         audiocontroller.line.set_ydata(data)
-        #time.wait(0.05)
+        # time.wait(0.05)

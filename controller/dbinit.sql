@@ -72,9 +72,9 @@ CREATE TABLE IF NOT EXISTS Fases (
 
 CREATE TABLE IF NOT EXISTS Interpretaciones (
 	InterpretacionId INTEGER PRIMARY KEY,
-	CapturaId INTEGER NOT NULL,
    	Lectura TEXT NOT NULL,
 	MasInfo TEXT NOT NULL,
+	CapturaId INTEGER NOT NULL,
 	CulturaObjetivoId INTEGER NOT NULL,
 	FOREIGN KEY (CapturaId) 
       REFERENCES Capturas (CapturaId) 
@@ -121,9 +121,15 @@ INSERT INTO Conversaciones VALUES(4,"Saludo y presentaciones","¿Cuáles son las
 
 INSERT INTO Capturas VALUES(1,40.0,0.27,4,2,1,0);
 INSERT INTO Capturas VALUES(2,40.0,0.27,4,1,4,0);
+INSERT INTO "main"."Capturas"
+("CapturaId", "VolumenDeVoz", "PalabrasPorSegundo", "Posicion", "Mirada", "Rostro", "Cabeza")
+VALUES (3, 600, 0.50, 0, 0, 0, 0);
 
-INSERT INTO Interpretaciones VALUES(1,1,"Considerado y dispuesto","lalalala",1);
-INSERT INTO Interpretaciones VALUES(2,2,"Sumiso y servicial","lalalala",1);
+INSERT INTO Interpretaciones VALUES(1,"Considerado y dispuesto","lalalala",1,1);
+INSERT INTO Interpretaciones VALUES(2,"Sumiso y servicial","lalalala",2,1);
+INSERT INTO "main"."Interpretaciones"
+("InterpretacionId", "Lectura", "MasInfo", "CapturaId", "CulturaObjetivoId")
+VALUES (3, 'Explicación Genérica', 'Mas genérico imposible la verdad... no sabría que decirte', 3, 1);
 
 
 INSERT INTO Fases VALUES(1,"Saludo","Primer contacto",0.0,1.0,"¡Buenas tardes! ¿Como se encuentra usted hoy?",1,1);
