@@ -9,10 +9,13 @@ from model.linearesultado import LineaResultado
 from model.simulacion import Simulacion
 from kivy.uix.scrollview import ScrollView
 
+from view.widgetsmethods import WidgetCreator
+
 backgroundColor = '6A3192'
 subdivisionColor = [0.58, 0.337, 0.639]
 padding = [45, 0, 45, 10]
-textcolor = (1,1,1,1)
+textcolor = (1, 1, 1, 1)
+
 
 class ResultadoScreen(Screen):
     def __init__(self, simulacion: Simulacion, **kwargs):
@@ -25,18 +28,27 @@ class ResultadoScreenLayout(BoxLayout):
     def __init__(self, simulacion, **kwargs):
         super(ResultadoScreenLayout, self).__init__(**kwargs)
         self.orientation = 'vertical'
-        boxtitular = BoxLayout(size_hint=(1.0,None), height=40)
+        boxtitular = BoxLayout(size_hint=(1.0, None), height=40)
         boxtitular.orientation = 'horizontal'
-        boxtitular.add_widget(Label(text="Resultado General:",size_hint=(1.0,None), height=20, color=textcolor))
+        boxtitular.add_widget(Label(text="Resultado General:", size_hint=(1.0, None), height=20, color=textcolor))
         boxtitular.barraderesultado = BoxLayout()
         boxtitular.barraderesultado.orientation = 'vertical'
-        boxtitular.barraderesultado.add_widget(Label(text="Barra",size_hint=(1.0,None), height=20))
-        boxtitular.barraderesultado.add_widget(Label(text="Porcentaje",size_hint=(1.0,None), height=20))
+        boxtitular.barraderesultado.add_widget(Label(text="Barra", size_hint=(1.0, None), height=20))
+        boxtitular.barraderesultado.add_widget(Label(text="Porcentaje", size_hint=(1.0, None), height=20))
         boxtitular.add_widget(boxtitular.barraderesultado)
-        boxtitular.add_widget(Label(text="Usuario",size_hint=(1.0,1.0), height=20))
+        boxtitular.add_widget(Label(text="Usuario", size_hint=(1.0, 1.0), height=20))
         self.add_widget(boxtitular)
         self.add_widget(TabbedPanelResultados(simulacion))
+        btn = WidgetCreator.newbutton("Volver")
+        btn.bind(on_press=self.callback_volver)
+        self.add_widget(btn)
         # Llenar pantalla hacia abajo
+
+    def callback_volver(self, obj):
+        print("Boton volver")
+        from controller.controladorprincipal import ControladorPrincipal
+        ControladorPrincipal().guardarsimulacion()
+        ControladorPrincipal().volveramenu()
 
 
 class TabbedPanelResultados(TabbedPanel):
@@ -57,12 +69,13 @@ class TabbedPanelItemResultados(TabbedPanelItem):
     def __init__(self, resultado: LineaResultado, fase, nrodefase: Fase, **kwargs):
         super(TabbedPanelItemResultados, self).__init__(**kwargs)
         self.text = f"Fase {nrodefase}"
-        content = BoxLayout(halign='left',valign="middle")
+        content = BoxLayout()
+        # content = BoxLayout(halign='left', valign="middle")
         content.orientation = 'vertical'
-        content.add_widget(Label(text=f"{fase.nombre}",size_hint=(1.0,None), height=20))
-        content.add_widget(Label(text="Captura de usuario:", size_hint=(1.0,None), height=20))
+        content.add_widget(Label(text=f"{fase.nombre}", size_hint=(1.0, None), height=20))
+        content.add_widget(Label(text="Captura de usuario:", size_hint=(1.0, None), height=20))
 
-        grid = GridLayout(cols=2, row_force_default=True, row_default_height=40, size_hint=(1.0,None), height=240)
+        grid = GridLayout(cols=2, row_force_default=True, row_default_height=40, size_hint=(1.0, None), height=240)
 
         grid.add_widget(Label(text="Rostro", size_hint=(None, 1), width=100))
         rostro = BoxLayout(orientation='horizontal')
@@ -101,9 +114,10 @@ class TabbedPanelItemResultados(TabbedPanelItem):
         grid.add_widget(velocidad)
 
         content.add_widget(grid)
-        content.add_widget(Label(text=f"Interpretación: {resultado.interpretacion.lectura}", size_hint=(1.0,None), height=20))
+        content.add_widget(
+            Label(text=f"Interpretación: {resultado.interpretacion.lectura}", size_hint=(1.0, None), height=20))
 
-        scrollableInfo = ScrollView(size_hint=(1.0,1.0))
+        scrollableInfo = ScrollView(size_hint=(1.0, 1.0))
         scrollableInfo.add_widget(Label(text=f"{resultado.interpretacion.masinfo}"))
         content.add_widget(scrollableInfo)
         self.add_widget(content)

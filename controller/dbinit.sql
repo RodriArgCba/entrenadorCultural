@@ -3,13 +3,13 @@ CREATE TABLE IF NOT EXISTS Usuarios (
    	Nombre TEXT NOT NULL,
 	Email TEXT NOT NULL,
 	Administrador BOOLEAN NOT NULL
-) WITHOUT ROWID;
+) ;
 
 CREATE TABLE IF NOT EXISTS CulturasObjetivo (
 	CulturaObjetivoId INTEGER PRIMARY KEY,
    	Nombre TEXT NOT NULL,
 	Descripcion TEXT NOT NULL
-) WITHOUT ROWID;
+) ;
 
 CREATE TABLE IF NOT EXISTS Conversaciones (
 	ConversacionId INTEGER PRIMARY KEY,
@@ -22,12 +22,11 @@ CREATE TABLE IF NOT EXISTS Conversaciones (
       REFERENCES CulturasObjetivo (CulturaObjetivoId) 
          ON DELETE NO ACTION
          ON UPDATE NO ACTION
-) WITHOUT ROWID;
+) ;
 
 CREATE TABLE IF NOT EXISTS Simulaciones (
 	SimulacionId INTEGER PRIMARY KEY,
    	Fecha DATE NOT NULL,
-	Email TEXT NOT NULL,
 	ConversacionId INTEGER NOT NULL,
 	UsuarioId INTEGER NOT NULL,
 	CalificacionDeUsuario INTEGER NOT NULL,
@@ -39,7 +38,7 @@ CREATE TABLE IF NOT EXISTS Simulaciones (
       REFERENCES Usuarios (UsuarioId) 
          ON DELETE NO ACTION
          ON UPDATE NO ACTION
-) WITHOUT ROWID;
+) ;
 
 CREATE TABLE IF NOT EXISTS Capturas (
 	CapturaId INTEGER PRIMARY KEY,
@@ -49,7 +48,7 @@ CREATE TABLE IF NOT EXISTS Capturas (
 	Mirada INTEGER NOT NULL,
 	Rostro INTEGER NOT NULL,
 	Cabeza INTEGER NOT NULL
-) WITHOUT ROWID;
+) ;
 
 CREATE TABLE IF NOT EXISTS Fases (
 	FaseId INTEGER PRIMARY KEY,
@@ -68,7 +67,7 @@ CREATE TABLE IF NOT EXISTS Fases (
       REFERENCES Conversaciones (ConversacionId) 
          ON DELETE NO ACTION
          ON UPDATE NO ACTION
-) WITHOUT ROWID;
+) ;
 
 CREATE TABLE IF NOT EXISTS Interpretaciones (
 	InterpretacionId INTEGER PRIMARY KEY,
@@ -84,7 +83,7 @@ CREATE TABLE IF NOT EXISTS Interpretaciones (
       REFERENCES CulturasObjetivo (CulturaObjetivoId) 
          ON DELETE NO ACTION
          ON UPDATE NO ACTION
-) WITHOUT ROWID;
+) ;
 
 CREATE TABLE IF NOT EXISTS LineasDeResultado (
 	LineaDeResultadoId INTEGER PRIMARY KEY,
@@ -104,7 +103,7 @@ CREATE TABLE IF NOT EXISTS LineasDeResultado (
       REFERENCES Simulaciones (SimulacionId) 
          ON DELETE NO ACTION
          ON UPDATE NO ACTION
-) WITHOUT ROWID;
+) ;
 
 
 

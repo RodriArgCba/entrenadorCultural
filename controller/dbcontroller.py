@@ -10,6 +10,7 @@ from model.interpretacion import Interpretacion
 from model.movimientocabeza import MovimientoCabeza
 from model.posicionbrazos import PosicionBrazos
 from model.rostro import Rostro
+from model.simulacion import Simulacion
 
 con = sqlite3.connect('sqlitedb.db')
 cursorObj = con.cursor()
@@ -66,6 +67,28 @@ def fasesdeconversacion(conversacion: Conversacion):
         fase.id = x[0]
         resultados.append(fase)
     return resultados
+
+
+def guardarresultado(simulacion: Simulacion):
+    cursorObj.execute("""INSERT INTO Simulaciones (Fecha, ConversacionId,
+                         UsuarioId, CalificacionDeUsuario) VALUES(?, ?, ?, ?)""",
+                      (simulacion.fecha, simulacion.conversacion.id, 1, 100)
+                      )
+    cursorObj.execute("SELECT last_insert_rowid()")
+    idsimulacion = cursorObj.fetchone()[0]
+    for linearesultado in simulacion.resultados:
+        captura = linearesultado.captura
+        cursorObj.execute("""INSERT INTO Capturas (VolumenDeVoz, PalabrasPorSegundo,
+                            Posicion, Mirada, Rostro, Cabeza) VALUES(?, ?, ?, ?, ?, ?)""",
+                          (captura.volumendevoz, captura.palabrasporsegundo, captura.posicionbrazos.value,
+                           captura.mirada.value, captura.rostro.value, captura.cabeza.value)
+                          )
+        cursorObj.execute("SELECT last_insert_rowid()")
+        idcaptura = cursorObj.fetchone()[0]
+        cursorObj.execute("""INSERT INTO LineasDeResultado (FaseId, CapturaId,
+                            InterpretacionId, SimulacionId) VALUES(?, ?, ?, ?)""",
+                          (linearesultado.fase.id, idcaptura, linearesultado.interpretacion.id, idsimulacion))
+    con.commit()
 
 # cnxn = pyodbc.connect("Driver={SQL Server Native Client 18.0};"
 #                      "Server=SQLEXPRESS;"

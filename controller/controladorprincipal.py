@@ -15,7 +15,7 @@ from kivy.app import App
 
 from view.resultadoscreen import ResultadoScreen
 from view.simulacionscreen import SimulacionScreen
-from view.widgetsmethods import WidgetCreator
+from controller.dbcontroller import guardarresultado
 
 kivy.require('1.11.1')
 
@@ -114,6 +114,13 @@ class ControladorPrincipal(object):
         app = App.get_running_app()
         app.root.add_widget(ResultadoScreen(self.simulacion, name="resultado"))
         app.root.current = 'resultado'
+
+    def guardarsimulacion(self):
+        guardarresultado(self.simulacion)
+
+    def volveramenu(self):
+        app = App.get_running_app()
+        app.root.current = 'menu'
 
 
 
