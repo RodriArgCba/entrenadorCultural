@@ -1,6 +1,8 @@
 import threading
 import kivy
 from kivy.uix.screenmanager import ScreenManager
+from kivymd.app import MDApp
+
 from controller.audiocontroller import updatesound, contarpalabras, AudioController, ContadorDePalabras
 from controller.cvcontroller import CamaraController, updateimage, updategesture
 from model.captura import Captura
@@ -10,8 +12,8 @@ from model.direccionmirada import DireccionMirada
 from model.linearesultado import LineaResultado
 from model.movimientocabeza import MovimientoCabeza
 from model.simulacion import Simulacion
+from view.historialdeusuarioscreen import HistorialDeUsuario
 from view.menuprincipal import MenuPrincipal
-from kivy.app import App
 
 from view.resultadoscreen import ResultadoScreen
 from view.simulacionscreen import SimulacionScreen
@@ -58,7 +60,7 @@ class ControladorPrincipal(object):
             self.threadsonido.start()
             ContadorDePalabras().killthread = False
             self.threadcontadorpalabras.start()
-            app = App.get_running_app()
+            app = MDApp.get_running_app()
             app.root.add_widget(self.pantallasimulacion)
             app.root.current = 'simulacion'
             self.simulacion.conversacion = self.conversacionseleccionada
@@ -91,7 +93,9 @@ class ControladorPrincipal(object):
         self.simulacion.resultados = resultados
 
     def verhistorialusuario(self):
-        pass
+        app = MDApp.get_running_app()
+        app.root.add_widget(HistorialDeUsuario(name="historialusuario"))
+        app.root.current = 'historialusuario'
 
     def listarhistorialtodoslosusuarios(self):
         pass
@@ -111,7 +115,7 @@ class ControladorPrincipal(object):
         AudioController().killthread = True
         ContadorDePalabras().killthread = True
         self.interpretarcapturas()
-        app = App.get_running_app()
+        app = MDApp.get_running_app()
         app.root.add_widget(ResultadoScreen(self.simulacion, name="resultado"))
         app.root.current = 'resultado'
 
@@ -119,12 +123,12 @@ class ControladorPrincipal(object):
         guardarresultado(self.simulacion)
 
     def volveramenu(self):
-        app = App.get_running_app()
+        app = MDApp.get_running_app()
         app.root.current = 'menu'
 
 
 
-class EntrenadorCulturalApp(App):
+class EntrenadorCulturalApp(MDApp):
     def __init__(self, **kwargs):
         super(EntrenadorCulturalApp, self).__init__(**kwargs)
 

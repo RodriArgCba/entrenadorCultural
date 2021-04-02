@@ -109,6 +109,8 @@ class LowerButtonsRow(BoxLayout):
 
     def callback_historial(self, obj):
         print("Boton historial")
+        from controller.controladorprincipal import ControladorPrincipal
+        ControladorPrincipal().verhistorialusuario()
 
     def callback_iniciarconversacion(self, obj):
         print("Boton Simulacion")
