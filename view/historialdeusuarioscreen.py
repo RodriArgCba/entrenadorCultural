@@ -9,13 +9,16 @@ padding = [45, 0, 45, 10]
 
 
 class HistorialDeUsuario(Screen):
-    def __init__(self, **kwargs):
+    def __init__(self, data, **kwargs):
         super(HistorialDeUsuario, self).__init__(**kwargs)
-        self.add_widget(HistorialDeUsuarioLayout())
+        self.add_widget(HistorialDeUsuarioLayout(data))
+
+    def updatedata(self, data):
+        pass
 
 
 class HistorialDeUsuarioLayout(BoxLayout):
-    def __init__(self, **kwargs):
+    def __init__(self, data, **kwargs):
         super(HistorialDeUsuarioLayout, self).__init__(**kwargs)
         self.orientation = 'vertical'
         self.padding = padding

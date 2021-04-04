@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS Conversaciones (
 
 CREATE TABLE IF NOT EXISTS Simulaciones (
 	SimulacionId INTEGER PRIMARY KEY,
-   	Fecha DATE NOT NULL,
+   	Fecha TIMESTAMP NOT NULL,
 	ConversacionId INTEGER NOT NULL,
 	UsuarioId INTEGER NOT NULL,
 	CalificacionDeUsuario INTEGER NOT NULL,

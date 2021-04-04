@@ -17,7 +17,7 @@ from view.menuprincipal import MenuPrincipal
 
 from view.resultadoscreen import ResultadoScreen
 from view.simulacionscreen import SimulacionScreen
-from controller.dbcontroller import guardarresultado
+from controller.dbcontroller import guardarresultado, obtenerhistorialdeusuario
 
 kivy.require('1.11.1')
 
@@ -94,7 +94,15 @@ class ControladorPrincipal(object):
 
     def verhistorialusuario(self):
         app = MDApp.get_running_app()
-        app.root.add_widget(HistorialDeUsuario(name="historialusuario"))
+        screenexists = False
+        for child in app.root.children:
+            if child.name == 'historialusuario':
+                screenexists = True
+                historialscreen = child
+        if not screenexists:
+            app.root.add_widget(HistorialDeUsuario(obtenerhistorialdeusuario(), name="historialusuario"))
+        else:
+            historialscreen.updatedata(obtenerhistorialdeusuario())
         app.root.current = 'historialusuario'
 
     def listarhistorialtodoslosusuarios(self):
@@ -127,12 +135,12 @@ class ControladorPrincipal(object):
         app.root.current = 'menu'
 
 
-
 class EntrenadorCulturalApp(MDApp):
     def __init__(self, **kwargs):
         super(EntrenadorCulturalApp, self).__init__(**kwargs)
 
     def build(self):
+        self.theme_cls.theme_style = "Dark"
         sm = ScreenManager()
         sm.add_widget(MenuPrincipal(name="menu"))
         return sm
