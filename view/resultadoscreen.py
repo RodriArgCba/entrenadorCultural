@@ -22,6 +22,9 @@ class ResultadoScreen(Screen):
         super(ResultadoScreen, self).__init__(**kwargs)
         self.add_widget(ResultadoScreenLayout(simulacion))
 
+    def updatedata(self, simulacion: Simulacion):
+        pass
+
 
 class ResultadoScreenLayout(BoxLayout):
 

@@ -105,6 +105,19 @@ class ControladorPrincipal(object):
             historialscreen.updatedata(obtenerhistorialdeusuario())
         app.root.current = 'historialusuario'
 
+    def detallesdesimulacion(self, simulacion: Simulacion):
+        app = MDApp.get_running_app()
+        screenexists = False
+        for child in app.root.children:
+            if child.name == 'resultado':
+                screenexists = True
+                resultadoscreen = child
+        if not screenexists:
+            app.root.add_widget(ResultadoScreen(simulacion, name="resultado"))
+        else:
+            resultadoscreen.updatedata(simulacion)
+        app.root.current = 'resultado'
+
     def listarhistorialtodoslosusuarios(self):
         pass
 

@@ -20,9 +20,30 @@ class HistorialDeUsuario(Screen):
 class HistorialDeUsuarioLayout(BoxLayout):
     def __init__(self, data, **kwargs):
         super(HistorialDeUsuarioLayout, self).__init__(**kwargs)
+        self.data = data
         self.orientation = 'vertical'
         self.padding = padding
+        row_data = []
+        for simulacion in data:
+            tupla = (simulacion.id,
+                     str(simulacion.fecha),
+                     simulacion.conversacion.culturaobjetivo.nombre,
+                     simulacion.conversacion.nombre,
+                     simulacion.calificaciondeusuario, "Detalles")
+            row_data.append(tupla)
         table = MDDataTable(column_data=[
-            ("Food", dp(30))
-        ])
+            ("", dp(10)),
+            ("FECHA", dp(30)),
+            ("CULTURA OBJETIVO", dp(30)),
+            ("CONVERSACIÓN", dp(30)),
+            ("RESULTADO", dp(20)),
+            ("", dp(30))
+        ], row_data=row_data)
+        table.bind(on_row_press=self.detallesdesimulacion)
         self.add_widget(table)
+
+    def detallesdesimulacion(self, table, row):
+        for simulacion in self.data:
+            if simulacion.id == int(row.index):
+                from controller.controladorprincipal import ControladorPrincipal
+                ControladorPrincipal().detallesdesimulacion(simulacion)
