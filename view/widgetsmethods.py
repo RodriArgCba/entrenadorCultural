@@ -1,13 +1,13 @@
-from kivy.uix.label import Label
+from kivymd.uix.label import MDLabel as Label
 from kivy.uix.spinner import Spinner, SpinnerOption
 from kivy.utils import get_color_from_hex as getcolor
 from kivy.factory import Factory
 from kivy.uix.image import Image
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
+from kivymd.uix.boxlayout import MDBoxLayout as BoxLayout
+from kivymd.uix.button import MDTextButton as Button
 
-textColor = 'ffffff'
-spinnerBackColor = 'af7ead'
+textColor = '000000'
+spinnerBackColor = 'e0e0e0'
 
 
 class CustomSpinnerOption(SpinnerOption):
@@ -65,7 +65,7 @@ class WidgetCreator:
         return image
 
     @staticmethod
-    def newimage(source,size=(0.4,1)) -> Image:
+    def newimage(source, size=(0.4, 1)) -> Image:
         image = BoxLayout(
             size_hint=size
         )

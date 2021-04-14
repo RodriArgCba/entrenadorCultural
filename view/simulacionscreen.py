@@ -1,8 +1,8 @@
 from kivy.clock import Clock
 from kivy.core.image import Texture
 from kivy.uix.image import Image
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.screenmanager import Screen
+from kivymd.uix.boxlayout import MDBoxLayout as BoxLayout
+from kivymd.uix.screen import MDScreen as Screen
 from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 from kivy.uix.scrollview import ScrollView
 from kivy.graphics import Color, Rectangle
@@ -14,7 +14,7 @@ from view.widgetsmethods import WidgetCreator
 camaracontroller = CamaraController()
 miccontroller = AudioController()
 backgroundColor = '6A3192'
-subdivisionColor = [0.58, 0.337, 0.639]
+subdivisionColor = [0.94, 0.94, 0.94]
 padding = [75, 0, 75, 0]
 
 

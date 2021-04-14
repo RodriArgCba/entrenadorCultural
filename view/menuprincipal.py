@@ -1,16 +1,16 @@
 from typing import List, Any
 from kivy.core.window import Window
 from kivy.graphics import Color, Rectangle
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.gridlayout import GridLayout
-from kivy.uix.label import Label
-from kivy.uix.screenmanager import Screen
+from kivymd.uix.boxlayout import MDBoxLayout as BoxLayout
+from kivymd.uix.gridlayout import MDGridLayout as GridLayout
+from kivymd.uix.label import MDLabel as Label
+from kivymd.uix.screen import MDScreen as Screen
 from kivy.utils import get_color_from_hex as getcolor
 from controller import dbcontroller
 from view.widgetsmethods import WidgetCreator
 
 backgroundColor = '6A3192'
-subdivisionColor = [0.58, 0.337, 0.639]
+subdivisionColor = [0.91, 0.91, 0.91]
 padding = [45, 0, 45, 10]
 culturas = dbcontroller.allculturas()
 conversaciones: List[Any] = []

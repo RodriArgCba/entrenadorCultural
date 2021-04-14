@@ -153,7 +153,6 @@ class EntrenadorCulturalApp(MDApp):
         super(EntrenadorCulturalApp, self).__init__(**kwargs)
 
     def build(self):
-        self.theme_cls.theme_style = "Dark"
         sm = ScreenManager()
         sm.add_widget(MenuPrincipal(name="menu"))
         return sm
