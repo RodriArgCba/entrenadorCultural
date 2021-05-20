@@ -1,14 +1,17 @@
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.gridlayout import GridLayout
-from kivy.uix.screenmanager import Screen
+import kivymd
+from kivymd.uix.boxlayout import MDBoxLayout as BoxLayout
+from kivymd.uix.datatables import MDDataTable
+from kivymd.icon_definitions import md_icons
+from kivymd.uix.gridlayout import MDGridLayout as GridLayout
+from kivymd.uix import Screen
 from kivy.uix.tabbedpanel import TabbedPanel, TabbedPanelItem
 from kivy.uix.image import Image
-from kivy.uix.label import Label
+from kivymd.uix.label import MDLabel as Label
 from model.fase import Fase
 from model.linearesultado import LineaResultado
 from model.simulacion import Simulacion
 from kivy.uix.scrollview import ScrollView
-
+from kivy.metrics import dp
 from view.widgetsmethods import WidgetCreator
 
 backgroundColor = '6A3192'
@@ -60,6 +63,7 @@ class TabbedPanelResultados(TabbedPanel):
         super(TabbedPanelResultados, self).__init__(**kwargs)
         self.do_default_tab = False
         self.tab_pos = 'left_top'
+        self.background_color = subdivisionColor
         fases = simulacion.conversacion.fases
         i = 0
         for resultado in simulacion.resultados:
@@ -77,46 +81,67 @@ class TabbedPanelItemResultados(TabbedPanelItem):
         content.orientation = 'vertical'
         content.add_widget(Label(text=f"{fase.nombre}", size_hint=(1.0, None), height=20))
         content.add_widget(Label(text="Captura de usuario:", size_hint=(1.0, None), height=20))
+        #HEVEOOOOOOOOOOO
+        IconButton = kivymd.uix.button.MDIconButton(icon='alert');
+        content.add_widget(IconButton);
+        #TERMINA EL HUEVEOOOOOOOOOOO
+        #Here starts the table
+        row_data = [
+            ("Rostro", resultado.captura.rostro.name, 'icon: alert'),
+            ("Mirada", resultado.captura.mirada.name, ('assets/Sonriendo.png', [255 / 256, 165 / 256, 0, 1], "")),
+            ("Cabeza", resultado.captura.cabeza.name, ('assets/Sonriendo.png',[255 / 256, 165 / 256, 0, 1], "")),
+            ("Brazos", resultado.captura.posicionbrazos.name, ('assets/Sonriendo.png',[255 / 256, 165 / 256, 0, 1], "")),
+            ("Volumen de Voz", resultado.captura.volumendevoz, ('assets/Sonriendo.png',[255 / 256, 165 / 256, 0, 1], "")),
+            ("Palabras por minuto", resultado.captura.palabrasporsegundo, ('assets/Sonriendo.png',[255 / 256, 165 / 256, 0, 1], ""))
+        ]
+        table = MDDataTable(column_data=[
+            ("", dp(30)),
+            ("", dp(80)),
+            ("", dp(30)),
+        ], row_data=row_data)
+        content.add_widget(table)
 
-        grid = GridLayout(cols=2, row_force_default=True, row_default_height=40, size_hint=(1.0, None), height=240)
+        #Here is the old grid
+        # grid = GridLayout(cols=2, row_force_default=True, row_default_height=40, size_hint=(1.0, None), height=240)
+        #
+        # grid.add_widget(Label(text="Rostro", size_hint=(None, 1), width=100))
+        # rostro = BoxLayout(orientation='horizontal')
+        # rostro.add_widget(Label(text=resultado.captura.rostro.name))
+        # rostro.add_widget(Image(size_hint=(None, 0.9), width=40, source='assets/Sonriendo.png'))
+        # grid.add_widget(rostro)
+        #
+        # grid.add_widget(Label(text="Mirada", size_hint=(None, 1), width=100))
+        # mirada = BoxLayout(orientation='horizontal')
+        # mirada.add_widget(Label(text=resultado.captura.mirada.name))
+        # mirada.add_widget(Image(size_hint=(None, 0.9), width=40, source='assets/Sonriendo.png'))
+        # grid.add_widget(mirada)
+        #
+        # grid.add_widget(Label(text="Cabeza", size_hint=(None, 1), width=100))
+        # cabeza = BoxLayout(orientation='horizontal')
+        # cabeza.add_widget(Label(text=resultado.captura.cabeza.name))
+        # cabeza.add_widget(Image(size_hint=(None, 0.9), width=40, source='assets/Sonriendo.png'))
+        # grid.add_widget(cabeza)
+        #
+        # grid.add_widget(Label(text="Brazos", size_hint=(None, 1), width=100))
+        # brazos = BoxLayout(orientation='horizontal')
+        # brazos.add_widget(Label(text=resultado.captura.posicionbrazos.name))
+        # brazos.add_widget(Image(size_hint=(None, 0.9), width=40, source='assets/Sonriendo.png'))
+        # grid.add_widget(brazos)
+        #
+        # grid.add_widget(Label(text="Volumen de Voz", size_hint=(None, 1), width=100))
+        # volumen = BoxLayout(orientation='horizontal')
+        # volumen.add_widget(Label(text=str(resultado.captura.volumendevoz)))
+        # volumen.add_widget(Image(size_hint=(None, 0.9), width=40, source='assets/Sonriendo.png'))
+        # grid.add_widget(volumen)
+        #
+        # grid.add_widget(Label(text="Palabras por minuto", size_hint=(None, 1), width=100))
+        # velocidad = BoxLayout(orientation='horizontal')
+        # velocidad.add_widget(Label(text=str(resultado.captura.palabrasporsegundo)))
+        # velocidad.add_widget(Image(size_hint=(None, 0.9), width=40, source='assets/Sonriendo.png'))
+        # grid.add_widget(velocidad)
+        #
+        # content.add_widget(grid)
 
-        grid.add_widget(Label(text="Rostro", size_hint=(None, 1), width=100))
-        rostro = BoxLayout(orientation='horizontal')
-        rostro.add_widget(Label(text=resultado.captura.rostro.name))
-        rostro.add_widget(Image(size_hint=(None, 0.9), width=40, source='assets/Sonriendo.png'))
-        grid.add_widget(rostro)
-
-        grid.add_widget(Label(text="Mirada", size_hint=(None, 1), width=100))
-        mirada = BoxLayout(orientation='horizontal')
-        mirada.add_widget(Label(text=resultado.captura.mirada.name))
-        mirada.add_widget(Image(size_hint=(None, 0.9), width=40, source='assets/Sonriendo.png'))
-        grid.add_widget(mirada)
-
-        grid.add_widget(Label(text="Cabeza", size_hint=(None, 1), width=100))
-        cabeza = BoxLayout(orientation='horizontal')
-        cabeza.add_widget(Label(text=resultado.captura.cabeza.name))
-        cabeza.add_widget(Image(size_hint=(None, 0.9), width=40, source='assets/Sonriendo.png'))
-        grid.add_widget(cabeza)
-
-        grid.add_widget(Label(text="Brazos", size_hint=(None, 1), width=100))
-        brazos = BoxLayout(orientation='horizontal')
-        brazos.add_widget(Label(text=resultado.captura.posicionbrazos.name))
-        brazos.add_widget(Image(size_hint=(None, 0.9), width=40, source='assets/Sonriendo.png'))
-        grid.add_widget(brazos)
-
-        grid.add_widget(Label(text="Volumen de Voz", size_hint=(None, 1), width=100))
-        volumen = BoxLayout(orientation='horizontal')
-        volumen.add_widget(Label(text=str(resultado.captura.volumendevoz)))
-        volumen.add_widget(Image(size_hint=(None, 0.9), width=40, source='assets/Sonriendo.png'))
-        grid.add_widget(volumen)
-
-        grid.add_widget(Label(text="Palabras por minuto", size_hint=(None, 1), width=100))
-        velocidad = BoxLayout(orientation='horizontal')
-        velocidad.add_widget(Label(text=str(resultado.captura.palabrasporsegundo)))
-        velocidad.add_widget(Image(size_hint=(None, 0.9), width=40, source='assets/Sonriendo.png'))
-        grid.add_widget(velocidad)
-
-        content.add_widget(grid)
         content.add_widget(
             Label(text=f"Interpretación: {resultado.interpretacion.lectura}", size_hint=(1.0, None), height=20))
 

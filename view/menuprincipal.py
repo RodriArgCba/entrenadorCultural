@@ -10,7 +10,7 @@ from controller import dbcontroller
 from view.widgetsmethods import WidgetCreator
 
 backgroundColor = '6A3192'
-subdivisionColor = [0.91, 0.91, 0.91]
+subdivisionColor = [0.94, 0.91, 0.91]
 padding = [45, 0, 45, 10]
 culturas = dbcontroller.allculturas()
 conversaciones: List[Any] = []
