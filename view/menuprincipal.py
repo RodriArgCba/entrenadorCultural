@@ -1,6 +1,7 @@
 from typing import List, Any
 from kivy.core.window import Window
-from kivy.graphics import Color, Rectangle
+from kivy.graphics import Color
+from kivy.graphics import RoundedRectangle
 from kivymd.uix.boxlayout import MDBoxLayout as BoxLayout
 from kivymd.uix.gridlayout import MDGridLayout as GridLayout
 from kivymd.uix.label import MDLabel as Label
@@ -10,7 +11,7 @@ from controller import dbcontroller
 from view.widgetsmethods import WidgetCreator
 
 backgroundColor = '6A3192'
-subdivisionColor = [0.94, 0.91, 0.91]
+subdivisionColor = [0.91, 0.91, 0.91]
 padding = [45, 0, 45, 10]
 culturas = dbcontroller.allculturas()
 conversaciones: List[Any] = []
@@ -71,6 +72,7 @@ class MenuPrincipalLayout(BoxLayout):
                 values.append(x.nombre)
             self.conversación.values = values
             self.conversación.disabled = False
+            self.conversación
             from controller.controladorprincipal import ControladorPrincipal
             ControladorPrincipal().culturaseleccionada = cultura
         else:
@@ -134,15 +136,9 @@ class EstadoSensores(GridLayout):
         self.add_widget(WidgetCreator.newlabel('Sensor Ocular:', valign='middle', size_hint=(1.0, None)))
         self.add_widget(WidgetCreator.newicon("assets/Camara.png"))
         self.add_widget(WidgetCreator.newicon("assets/Sonriendo.png"))
-        grid = self
-        with grid.canvas.before:
+        with self.canvas.before:
             Color(subdivisionColor[0], subdivisionColor[1], subdivisionColor[2])
-            self.rect = Rectangle(size=grid.size, pos=grid.pos)
-
-        def update_rect(instance, value):
-            instance.rect.pos = instance.pos
-            instance.rect.size = instance.size
+            self.rect = RoundedRectangle(size=self.size, pos=self.pos, radius=[10])
 
         # listen to size and position changes
-        self.bind(pos=update_rect, size=update_rect)
-        # print(self.rect)
+        self.bind(pos=WidgetCreator.update_rect, size=WidgetCreator.update_rect)

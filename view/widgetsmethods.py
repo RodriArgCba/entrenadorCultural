@@ -28,7 +28,8 @@ class WidgetCreator:
     @staticmethod
     def newlabel(innertext, **kwargs):
         label = Label(
-            text='[color=' + textColor + ']' + innertext + '[/color]',
+            color=getcolor(textColor),
+            text=innertext,
             markup=True,
             **kwargs
         )
@@ -39,7 +40,8 @@ class WidgetCreator:
     @staticmethod
     def newspinner(innertext, values):
         spinner = Spinner(
-            text='[color=' + textColor + ']' + innertext + '[/color]',
+            color=getcolor(textColor),
+            text=innertext,
             values=values,
             height=44,
             size_hint=(0.7, None),
@@ -83,3 +85,8 @@ class WidgetCreator:
         )
         button.bind(size=button.setter('text_size'))
         return button
+
+    @staticmethod
+    def update_rect(instance, value):
+        instance.rect.pos = instance.pos
+        instance.rect.size = instance.size

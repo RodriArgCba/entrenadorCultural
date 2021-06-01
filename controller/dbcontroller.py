@@ -100,7 +100,7 @@ def obtenerhistorialdeusuario():
         cursorObj.execute(f"SELECT * From Conversaciones WHERE ConversacionId={x[2]}")
         y = cursorObj.fetchone()
         conversacion = Conversacion(y[1], y[2], y[3], None, y[5])
-        conversacion.id = x[0]
+        conversacion.id = x[2]
         conversacion.fases = fasesdeconversacion(conversacion)
         cursorObj.execute(f"SELECT * From CulturasObjetivo WHERE CulturaObjetivoId={y[4]}")
         z = cursorObj.fetchone()

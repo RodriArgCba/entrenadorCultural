@@ -71,8 +71,10 @@ class ControladorPrincipal(object):
         captura = Captura()
         contadordepalabras = ContadorDePalabras()
         captura.palabrasporsegundo = contadordepalabras.acumulado / contadordepalabras.duracionacumulada
+        contadordepalabras.resetearcuenta()
         audiocontroller = AudioController()
         captura.volumendevoz = audiocontroller.volumenpromedio
+        audiocontroller.reset = True
         camaracontroller = CamaraController()
         captura.rostro = camaracontroller.capturegesture()
         captura.posicionbrazos = camaracontroller.capturepose()
@@ -113,9 +115,11 @@ class ControladorPrincipal(object):
                 screenexists = True
                 resultadoscreen = child
         if not screenexists:
-            app.root.add_widget(ResultadoScreen(simulacion, name="resultado"))
+            resultadoscreen = ResultadoScreen(simulacion, name="resultado")
+            app.root.add_widget(resultadoscreen)
         else:
             resultadoscreen.updatedata(simulacion)
+        resultadoscreen.resultadosscreenlayout.guardarsimulacionalsalir = False
         app.root.current = 'resultado'
 
     def listarhistorialtodoslosusuarios(self):

@@ -28,12 +28,13 @@ class ContadorDePalabras(object):
     def resetearcuenta(self):
         self.nrocaptura = 0
         self.acumulado = 0
+        self.duracionacumulada = 0
 
 
 def contarpalabras():
     contador = ContadorDePalabras()
     with contador.microphone as source:
-        while (not contador.killthread):
+        while not contador.killthread:
             ti = time.time()
             audio = contador.recognizer.listen(source)
             duracion = time.time() - ti
@@ -59,6 +60,7 @@ class AudioController(object):
                 if cls._instance is None:
                     print('Creating the object')
                     cls._instance = super(AudioController, cls).__new__(cls)
+                    cls._instance.reset = False
                     cls._instance.volumenacumulado = 0.0
                     cls._instance.volumenpromedio = 0.0
                     cls._instance.RATE = 44100
@@ -86,13 +88,17 @@ class AudioController(object):
 def updatesound():
     audiocontroller = AudioController()
     i = 0
-    while (not audiocontroller.killthread):
+    while not audiocontroller.killthread:
+        if audiocontroller.reset:
+            i = 0
+            audiocontroller.volumenacumulado = 0.0
+            audiocontroller.volumenpromedio = 0.0
+            audiocontroller.reset = False
         rawdata = audiocontroller.stream.read(audiocontroller.CHUNK)
-        volumen = audioop.rms(rawdata, 2)
-        if volumen > 0:
+        volumen = 10 * np.log10(pow(audioop.rms(rawdata, 2), 2) / pow(20, 2))
+        if volumen > 20:
             i = i + 1
             audiocontroller.volumenacumulado = audiocontroller.volumenacumulado + volumen
             audiocontroller.volumenpromedio = audiocontroller.volumenacumulado / i
         data = np.fromstring(rawdata, dtype=np.int16)
         audiocontroller.line.set_ydata(data)
-        # time.wait(0.05)

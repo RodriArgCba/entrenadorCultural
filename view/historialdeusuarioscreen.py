@@ -44,6 +44,6 @@ class HistorialDeUsuarioLayout(BoxLayout):
 
     def detallesdesimulacion(self, table, row):
         for simulacion in self.data:
-            if simulacion.id == int(row.index):
+            if simulacion.id == int(row.Index):
                 from controller.controladorprincipal import ControladorPrincipal
                 ControladorPrincipal().detallesdesimulacion(simulacion)
