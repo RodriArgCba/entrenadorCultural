@@ -9,7 +9,9 @@ from kivy.graphics import Color, RoundedRectangle, Rectangle
 from model.fase import Fase
 from controller.audiocontroller import AudioController
 from controller.cvcontroller import CamaraController
+from model.rostro import Rostro
 from view.widgetsmethods import WidgetCreator
+from view.selectordeiconos import SelectorDeIconos
 
 camaracontroller = CamaraController()
 miccontroller = AudioController()
@@ -69,14 +71,8 @@ class SimulacionScreenLayout(BoxLayout):
         self.userinputbox.poselabel.text = "Brazos: " + pose.name
         rostro = camaracontroller.capturegesture()
         self.userinputbox.rostrolabel.text = "Rostro: " + rostro.name
-        if rostro.value == 1:
-            self.userinputbox.rostroimage.source = "assets/Sonriendo.png"
-        elif rostro.value == 2:
-            self.userinputbox.rostroimage.source = "assets/Serio.png"
-        elif rostro.value == 3:
-            self.userinputbox.rostroimage.source = "assets/Irritado.png"
-        elif rostro.value == 4:
-            self.userinputbox.rostroimage.source = "assets/Preocupado.png"
+        if SelectorDeIconos.iconoderostro(rostro) is not None:
+            self.userinputbox.rostroimage.source = SelectorDeIconos.iconoderostro(rostro)
         buf = camaracontroller.captureposeimage()
         self.soundwave.draw()
         if buf is not False:
@@ -125,7 +121,7 @@ class UserInputBox(BoxLayout):
         leftupbox.add_widget(soundwave)
         leftbox.add_widget(leftupbox)
         leftdownbox = BoxLayout(orientation='horizontal')
-        self.rostroimage = Image(source="assets/Serio.png", size_hint=(0.1, 1))
+        self.rostroimage = Image(source=SelectorDeIconos.iconoderostro(Rostro.SERIO), size_hint=(0.1, 1))
         leftdownbox.add_widget(self.rostroimage)
         self.rostrolabel = WidgetCreator.newlabel("SERIO", size_hint=(1.0, None))
         leftdownbox.add_widget(self.rostrolabel)

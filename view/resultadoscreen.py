@@ -1,3 +1,5 @@
+from kivy.graphics.context_instructions import Color
+from kivy.graphics.vertex_instructions import Rectangle
 from kivy.uix.image import Image
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.tabbedpanel import TabbedPanel, TabbedPanelItem
@@ -9,12 +11,16 @@ from kivymd.uix.label import MDLabel as Label
 from model.fase import Fase
 from model.linearesultado import LineaResultado
 from model.simulacion import Simulacion
+from view.selectordeiconos import SelectorDeIconos
 from view.widgetsmethods import WidgetCreator
 
 backgroundColor = '6A3192'
 subdivisionColor = [0.58, 0.337, 0.639]
+firstrowcolor = [183.09 / 255, 210.885 / 255, 236.895 / 255]
+secondrowcolor = [207.06 / 255, 224.91 / 255, 250.92 / 255]
 padding = [45, 0, 45, 10]
 textcolor = (1, 1, 1, 1)
+gridpadding = [5, 5, 5, 5]
 
 
 class ResultadoScreen(Screen):
@@ -76,54 +82,160 @@ class TabbedPanelItemResultados(TabbedPanelItem):
     def __init__(self, resultado: LineaResultado, fase, nrodefase: Fase, **kwargs):
         super(TabbedPanelItemResultados, self).__init__(**kwargs)
         self.text = f"Fase {nrodefase}"
-        content = BoxLayout()
+        content = BoxLayout(padding=gridpadding)
         # content = BoxLayout(halign='left', valign="middle")
         content.orientation = 'vertical'
         content.add_widget(Label(text=f"{fase.nombre}", size_hint=(1.0, None), height=20))
         content.add_widget(Label(text="Captura de usuario:", size_hint=(1.0, None), height=20))
 
-        grid = GridLayout(cols=2, row_force_default=True, row_default_height=40, size_hint=(1.0, None), height=240)
+        grid = GridLayout(
+            cols=2,
+            row_force_default=True,
+            row_default_height=40,
+            size_hint=(1.0, None),
+            height=240,
+            spacing=5,
+            padding=gridpadding,
+        )
+        label = Label(text="Rostro", size_hint=(None, 1), width=100)
+        with label.canvas.before:
+            Color(firstrowcolor[0], firstrowcolor[1], firstrowcolor[2])
+            label.rect = Rectangle(size=self.size, pos=self.pos)
+        label.bind(pos=WidgetCreator.update_rect, size=WidgetCreator.update_rect)
+        grid.add_widget(label)
 
-        grid.add_widget(Label(text="Rostro", size_hint=(None, 1), width=100))
         rostro = BoxLayout(orientation='horizontal')
         rostro.add_widget(Label(text=resultado.captura.rostro.name))
-        rostro.add_widget(Image(size_hint=(None, 0.9), width=40, source='assets/Sonriendo.png'))
+        rostro.add_widget(
+            Image(
+                size_hint=(None, 0.9),
+                width=40,
+                source=SelectorDeIconos.iconoderostro(resultado.captura.rostro)
+            )
+        )
+        with rostro.canvas.before:
+            Color(firstrowcolor[0], firstrowcolor[1], firstrowcolor[2])
+            rostro.rect = Rectangle(size=self.size, pos=self.pos)
+        rostro.bind(pos=WidgetCreator.update_rect, size=WidgetCreator.update_rect)
         grid.add_widget(rostro)
 
-        grid.add_widget(Label(text="Mirada", size_hint=(None, 1), width=100))
+        label = Label(text="Mirada", size_hint=(None, 1), width=100)
+        with label.canvas.before:
+            Color(secondrowcolor[0], secondrowcolor[1], secondrowcolor[2])
+            label.rect = Rectangle(size=self.size, pos=self.pos)
+        label.bind(pos=WidgetCreator.update_rect, size=WidgetCreator.update_rect)
+        grid.add_widget(label)
+
         mirada = BoxLayout(orientation='horizontal')
         mirada.add_widget(Label(text=resultado.captura.mirada.name))
-        mirada.add_widget(Image(size_hint=(None, 0.9), width=40, source='assets/Sonriendo.png'))
+        mirada.add_widget(
+            Image(
+                size_hint=(None, 0.9),
+                width=40,
+                source=SelectorDeIconos.iconodemirada(resultado.captura.mirada)
+            )
+        )
+        with mirada.canvas.before:
+            Color(secondrowcolor[0], secondrowcolor[1], secondrowcolor[2])
+            mirada.rect = Rectangle(size=self.size, pos=self.pos)
+        mirada.bind(pos=WidgetCreator.update_rect, size=WidgetCreator.update_rect)
         grid.add_widget(mirada)
 
-        grid.add_widget(Label(text="Cabeza", size_hint=(None, 1), width=100))
+        label = Label(text="Cabeza", size_hint=(None, 1), width=100)
+        with label.canvas.before:
+            Color(firstrowcolor[0], firstrowcolor[1], firstrowcolor[2])
+            label.rect = Rectangle(size=self.size, pos=self.pos)
+        label.bind(pos=WidgetCreator.update_rect, size=WidgetCreator.update_rect)
+        grid.add_widget(label)
+
         cabeza = BoxLayout(orientation='horizontal')
         cabeza.add_widget(Label(text=resultado.captura.cabeza.name))
-        cabeza.add_widget(Image(size_hint=(None, 0.9), width=40, source='assets/Sonriendo.png'))
+        cabeza.add_widget(
+            Image(
+                size_hint=(None, 0.9),
+                width=40,
+                source=SelectorDeIconos.iconodecabeza(resultado.captura.cabeza)
+            )
+        )
+        with cabeza.canvas.before:
+            Color(firstrowcolor[0], firstrowcolor[1], firstrowcolor[2])
+            cabeza.rect = Rectangle(size=self.size, pos=self.pos)
+        cabeza.bind(pos=WidgetCreator.update_rect, size=WidgetCreator.update_rect)
         grid.add_widget(cabeza)
 
-        grid.add_widget(Label(text="Brazos", size_hint=(None, 1), width=100))
+        label = Label(text="Brazos", size_hint=(None, 1), width=100)
+        with label.canvas.before:
+            Color(secondrowcolor[0], secondrowcolor[1], secondrowcolor[2])
+            label.rect = Rectangle(size=self.size, pos=self.pos)
+        label.bind(pos=WidgetCreator.update_rect, size=WidgetCreator.update_rect)
+        grid.add_widget(label)
+
         brazos = BoxLayout(orientation='horizontal')
         brazos.add_widget(Label(text=resultado.captura.posicionbrazos.name))
-        brazos.add_widget(Image(size_hint=(None, 0.9), width=40, source='assets/Sonriendo.png'))
+        brazos.add_widget(
+            Image(
+                size_hint=(None, 0.9),
+                width=40,
+                source=SelectorDeIconos.iconodebrazos(resultado.captura.posicionbrazos)
+            )
+        )
+        with brazos.canvas.before:
+            Color(secondrowcolor[0], secondrowcolor[1], secondrowcolor[2])
+            brazos.rect = Rectangle(size=self.size, pos=self.pos)
+        brazos.bind(pos=WidgetCreator.update_rect, size=WidgetCreator.update_rect)
         grid.add_widget(brazos)
 
-        grid.add_widget(Label(text="Volumen de Voz", size_hint=(None, 1), width=100))
+        label = Label(text="Volumen de Voz", size_hint=(None, 1), width=100)
+        with label.canvas.before:
+            Color(firstrowcolor[0], firstrowcolor[1], firstrowcolor[2])
+            label.rect = Rectangle(size=self.size, pos=self.pos)
+        label.bind(pos=WidgetCreator.update_rect, size=WidgetCreator.update_rect)
+        grid.add_widget(label)
+
         volumen = BoxLayout(orientation='horizontal')
         volumen.add_widget(Label(text=str(resultado.captura.volumendevoz)))
-        volumen.add_widget(Image(size_hint=(None, 0.9), width=40, source='assets/Sonriendo.png'))
+        volumen.add_widget(
+            Image(
+                size_hint=(None, 0.9),
+                width=40,
+                source=SelectorDeIconos.iconodevolumen(resultado.captura.volumendevoz)
+            )
+        )
+        with volumen.canvas.before:
+            Color(firstrowcolor[0], firstrowcolor[1], firstrowcolor[2])
+            volumen.rect = Rectangle(size=self.size, pos=self.pos)
+        volumen.bind(pos=WidgetCreator.update_rect, size=WidgetCreator.update_rect)
         grid.add_widget(volumen)
 
-        grid.add_widget(Label(text="Palabras por minuto", size_hint=(None, 1), width=100))
+        label = Label(text="Palabras por minuto", size_hint=(None, 1), width=100)
+        with label.canvas.before:
+            Color(secondrowcolor[0], secondrowcolor[1], secondrowcolor[2])
+            label.rect = Rectangle(size=self.size, pos=self.pos)
+        label.bind(pos=WidgetCreator.update_rect, size=WidgetCreator.update_rect)
+        grid.add_widget(label)
+
         velocidad = BoxLayout(orientation='horizontal')
         velocidad.add_widget(Label(text=str(resultado.captura.palabrasporsegundo)))
-        velocidad.add_widget(Image(size_hint=(None, 0.9), width=40, source='assets/Sonriendo.png'))
+        velocidad.add_widget(
+            Image(
+                size_hint=(None, 0.9),
+                width=40,
+                source=SelectorDeIconos.iconodevelocidad(resultado.captura.palabrasporsegundo)
+            )
+        )
+        with velocidad.canvas.before:
+            Color(secondrowcolor[0], secondrowcolor[1], secondrowcolor[2])
+            velocidad.rect = Rectangle(size=self.size, pos=self.pos)
+        velocidad.bind(pos=WidgetCreator.update_rect, size=WidgetCreator.update_rect)
         grid.add_widget(velocidad)
 
         content.add_widget(grid)
 
-        content.add_widget(
+        box = BoxLayout()
+        box.add_widget(
             Label(text=f"Interpretación: {resultado.interpretacion.lectura}", size_hint=(1.0, None), height=20))
+        content.add_widget(box)
+
 
         scrollableInfo = ScrollView(size_hint=(1.0, 1.0))
         scrollableInfo.add_widget(Label(text=f"{resultado.interpretacion.masinfo}"))

@@ -1,4 +1,4 @@
-from kivymd.uix.label import MDLabel as Label
+from kivymd.uix.label import MDLabel as Label, MDIcon
 from kivy.uix.spinner import Spinner, SpinnerOption
 from kivy.utils import get_color_from_hex as getcolor
 from kivy.factory import Factory
@@ -56,6 +56,18 @@ class WidgetCreator:
         spinner.background_color = getcolor(spinnerBackColor)
         spinner.markup = True
         return spinner
+
+    @staticmethod
+    def newmdicon(iconname, **kwargs):
+        image = BoxLayout(
+            padding=5,
+            size_hint=(0.1, 0.1)
+        )
+        image.add_widget(MDIcon(
+            icon=iconname,
+            **kwargs
+        ))
+        return image
 
     @staticmethod
     def newicon(source) -> Image:

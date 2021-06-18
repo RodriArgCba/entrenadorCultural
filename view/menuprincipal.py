@@ -4,7 +4,7 @@ from kivy.graphics import Color
 from kivy.graphics import RoundedRectangle
 from kivymd.uix.boxlayout import MDBoxLayout as BoxLayout
 from kivymd.uix.gridlayout import MDGridLayout as GridLayout
-from kivymd.uix.label import MDLabel as Label
+from kivymd.uix.label import MDLabel as Label, MDIcon
 from kivymd.uix.screen import MDScreen as Screen
 from kivy.utils import get_color_from_hex as getcolor
 from controller import dbcontroller
@@ -124,18 +124,19 @@ class EstadoSensores(GridLayout):
     def __init__(self, **kwargs):
         super(EstadoSensores, self).__init__(**kwargs)
         self.cols = 3
+
         self.add_widget(WidgetCreator.newlabel('Cámara:', valign='middle', size_hint=(1.0, None)))
-        self.add_widget(WidgetCreator.newicon("assets/Camara.png"))
-        self.add_widget(WidgetCreator.newicon("assets/Sonriendo.png"))
+        self.add_widget(WidgetCreator.newmdicon('camera'))
+        self.add_widget(WidgetCreator.newmdicon('checkbox-marked-outline', text_color=getcolor("#008000"), theme_text_color="Custom"))
         self.add_widget(WidgetCreator.newlabel('Micrófono:', valign='middle', size_hint=(1.0, None)))
-        self.add_widget(WidgetCreator.newicon("assets/Camara.png"))
-        self.add_widget(WidgetCreator.newicon("assets/Sonriendo.png"))
+        self.add_widget(WidgetCreator.newmdicon('microphone'))
+        self.add_widget(WidgetCreator.newmdicon('checkbox-marked-outline', text_color=getcolor("#008000"), theme_text_color="Custom"))
         self.add_widget(WidgetCreator.newlabel('Casco de Realidad Virtual:', valign='middle', size_hint=(1.0, None)))
-        self.add_widget(WidgetCreator.newicon("assets/Camara.png"))
-        self.add_widget(WidgetCreator.newicon("assets/Sonriendo.png"))
+        self.add_widget(WidgetCreator.newmdicon('racing-helmet'))
+        self.add_widget(WidgetCreator.newmdicon('alert', theme_text_color='Error'))
         self.add_widget(WidgetCreator.newlabel('Sensor Ocular:', valign='middle', size_hint=(1.0, None)))
-        self.add_widget(WidgetCreator.newicon("assets/Camara.png"))
-        self.add_widget(WidgetCreator.newicon("assets/Sonriendo.png"))
+        self.add_widget(WidgetCreator.newmdicon('eye-outline'))
+        self.add_widget(WidgetCreator.newmdicon('alert', theme_text_color='Error'))
         with self.canvas.before:
             Color(subdivisionColor[0], subdivisionColor[1], subdivisionColor[2])
             self.rect = RoundedRectangle(size=self.size, pos=self.pos, radius=[10])
