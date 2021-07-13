@@ -7,7 +7,8 @@ from kivymd.uix import Screen
 from kivymd.uix.boxlayout import MDBoxLayout as BoxLayout
 from kivymd.uix.gridlayout import MDGridLayout as GridLayout
 from kivymd.uix.label import MDLabel as Label
-
+from kivymd.uix.progressbar import MDProgressBar
+from kivy.uix.progressbar import ProgressBar
 from model.fase import Fase
 from model.linearesultado import LineaResultado
 from model.simulacion import Simulacion
@@ -26,11 +27,13 @@ gridpadding = [5, 5, 5, 5]
 class ResultadoScreen(Screen):
     def __init__(self, simulacion: Simulacion, **kwargs):
         super(ResultadoScreen, self).__init__(**kwargs)
-        self.resultadosscreenlayout = ResultadoScreenLayout(simulacion)
-        self.add_widget(self.resultadosscreenlayout)
+        self.layout = ResultadoScreenLayout(simulacion)
+        self.add_widget(self.layout)
 
     def updatedata(self, simulacion: Simulacion):
-        pass
+        self.remove_widget(self.layout)
+        self.layout = ResultadoScreenLayout(simulacion)
+        self.add_widget(self.layout)
 
 
 class ResultadoScreenLayout(BoxLayout):
@@ -43,8 +46,11 @@ class ResultadoScreenLayout(BoxLayout):
         boxtitular.add_widget(Label(text="Resultado General:", size_hint=(1.0, None), height=20, color=textcolor))
         boxtitular.barraderesultado = BoxLayout()
         boxtitular.barraderesultado.orientation = 'vertical'
-        boxtitular.barraderesultado.add_widget(Label(text="Barra", size_hint=(1.0, None), height=20))
-        boxtitular.barraderesultado.add_widget(Label(text="Porcentaje", size_hint=(1.0, None), height=20))
+        self.barradenota = MDProgressBar(max=100)
+        self.barradenota.value = simulacion.calificaciondeusuario
+        self.barradenota.color = SelectorDeIconos.progressbarcolor(simulacion.calificaciondeusuario)
+        boxtitular.barraderesultado.add_widget(self.barradenota)
+        boxtitular.barraderesultado.add_widget(Label(text=str(simulacion.calificaciondeusuario) + "%", size_hint=(1.0, None), height=20))
         boxtitular.add_widget(boxtitular.barraderesultado)
         boxtitular.add_widget(Label(text="Usuario", size_hint=(1.0, 1.0), height=20))
         self.add_widget(boxtitular)

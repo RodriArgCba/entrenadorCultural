@@ -73,7 +73,7 @@ def fasesdeconversacion(conversacion: Conversacion):
 def guardarresultado(simulacion: Simulacion):
     cursorObj.execute("""INSERT INTO Simulaciones (Fecha, ConversacionId,
                          UsuarioId, CalificacionDeUsuario) VALUES(?, ?, ?, ?)""",
-                      (simulacion.fecha, simulacion.conversacion.id, 1, 1)
+                      (simulacion.fecha, simulacion.conversacion.id, 1, simulacion.calificaciondeusuario)
                       )
     cursorObj.execute("SELECT last_insert_rowid()")
     idsimulacion = cursorObj.fetchone()[0]

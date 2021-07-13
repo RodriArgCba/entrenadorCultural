@@ -28,6 +28,11 @@ class SimulacionScreen(Screen):
         self.layout = SimulacionScreenLayout()
         self.add_widget(self.layout)
 
+    def restart_screen(self):
+        self.remove_widget(self.layout)
+        self.layout = SimulacionScreenLayout()
+        self.add_widget(self.layout)
+
     def establecerfase(self, fase: Fase):
         self.layout.faselabel.text = fase.nombre
         new_box = MDBoxLayout(size_hint=(0.8, None), orientation='horizontal', height=50)
@@ -64,14 +69,15 @@ class SimulacionScreenLayout(BoxLayout):
         self.soundwave = FigureCanvasKivyAgg(AudioController().fig)
         self.userinputbox = UserInputBox(self.camara, self.soundwave, padding=[10, 10, 10, 10], spacing=10)
         self.add_widget(self.userinputbox)
+        self.simulacionfinalizada = False
         Clock.schedule_interval(self.update, 1.0 / 30.0)
 
     def update(self, dt):
         pose = camaracontroller.capturepose()
         self.userinputbox.poselabel.text = "Brazos: " + pose.name
         rostro = camaracontroller.capturegesture()
-        self.userinputbox.rostrolabel.text = "Rostro: " + rostro.name
-        if SelectorDeIconos.iconoderostro(rostro) is not None:
+        if rostro != Rostro.NOAPLICA:
+            self.userinputbox.rostrolabel.text = "Rostro: " + rostro.name
             self.userinputbox.rostroimage.source = SelectorDeIconos.iconoderostro(rostro)
         buf = camaracontroller.captureposeimage()
         self.soundwave.draw()
@@ -79,6 +85,8 @@ class SimulacionScreenLayout(BoxLayout):
             texture1 = Texture.create(size=(640, 480), colorfmt='bgr')
             texture1.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
             self.camara.texture = texture1
+        if self.simulacionfinalizada:
+            return False
 
 
 class ChatBox(ScrollView):
@@ -107,23 +115,25 @@ class UserInputBox(BoxLayout):
         # listen to size and position changes
         self.bind(pos=WidgetCreator.update_rect, size=WidgetCreator.update_rect)
         self.orientation = "horizontal"
-        rightbox = BoxLayout(orientation='vertical', size_hint=(0.3, 1))
-        rightupbox = BoxLayout(orientation='horizontal')
-        # rightupbox.add_widget(Image(source="assets/Camara.png", size_hint=(0.1, None), pos_hint={'top': 1}))
-        rightupbox.add_widget(camara)
-        rightbox.add_widget(rightupbox)
-        self.poselabel = WidgetCreator.newlabel("Brazos: NULL", size_hint=(1.0, None))
-        rightbox.add_widget(self.poselabel)
-        self.add_widget(rightbox)
-        leftbox = BoxLayout(orientation='vertical')
+        leftbox = BoxLayout(orientation='vertical', size_hint=(0.5, 1))
         leftupbox = BoxLayout(orientation='horizontal')
-        # leftupbox.add_widget(Image(source="assets/Camara.png", size_hint=(0.1, 0.1)))
-        leftupbox.add_widget(soundwave)
+        # leftupbox.add_widget(Image(source="assets/Camara.png", size_hint=(0.1, None), pos_hint={'top': 1}))
+        leftupbox.add_widget(camara)
         leftbox.add_widget(leftupbox)
-        leftdownbox = BoxLayout(orientation='horizontal')
-        self.rostroimage = Image(source=SelectorDeIconos.iconoderostro(Rostro.SERIO), size_hint=(0.1, 1))
+        leftdownbox = BoxLayout(orientation="horizontal", size_hint=(1, 0.3))
+        self.poselabel = WidgetCreator.newlabel("Brazos: NULL", size_hint=(1.0, None))
+        leftdownbox.add_widget(self.poselabel)
+        self.rostroimage = Image(source=SelectorDeIconos.iconoderostro(Rostro.SERIO), size_hint=(1, 1))
         leftdownbox.add_widget(self.rostroimage)
-        self.rostrolabel = WidgetCreator.newlabel("SERIO", size_hint=(1.0, None))
-        leftdownbox.add_widget(self.rostrolabel)
         leftbox.add_widget(leftdownbox)
         self.add_widget(leftbox)
+        rightbox = BoxLayout(orientation='vertical')
+        rightupbox = BoxLayout(orientation='horizontal')
+        # rightupbox.add_widget(Image(source="assets/Camara.png", size_hint=(0.1, 0.1)))
+        rightupbox.add_widget(soundwave)
+        rightbox.add_widget(rightupbox)
+        rightdownbox = BoxLayout(orientation='horizontal')
+        self.rostrolabel = WidgetCreator.newlabel("SERIO", size_hint=(1.0, None))
+        rightdownbox.add_widget(self.rostrolabel)
+        rightbox.add_widget(rightdownbox)
+        self.add_widget(rightbox)

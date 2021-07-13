@@ -118,11 +118,11 @@ INSERT INTO Conversaciones VALUES(2,"Explicando el producto","¿Cuáles son las 
 INSERT INTO Conversaciones VALUES(3,"Calmando al cliente","¿Cuáles son las primeras impresiones que das al saludar?",180.2,1,"assets/JAPONSaludosYPresentaciones.mp3");
 INSERT INTO Conversaciones VALUES(4,"Saludo y presentaciones","¿Cuáles son las primeras impresiones que das al saludar?",180.2,2,"assets/JAPONSaludosYPresentaciones.mp3");
 
-INSERT INTO Capturas VALUES(1,40.0,0.27,4,2,1,0);
-INSERT INTO Capturas VALUES(2,40.0,0.27,4,1,4,0);
+INSERT INTO Capturas VALUES(1,40.0,1.0,4,2,1,0);
+INSERT INTO Capturas VALUES(2,40.0,1.0,4,1,4,0);
 INSERT INTO "main"."Capturas"
 ("CapturaId", "VolumenDeVoz", "PalabrasPorSegundo", "Posicion", "Mirada", "Rostro", "Cabeza")
-VALUES (3, 600, 0.50, 0, 0, 0, 0);
+VALUES (3, 40.0, 1.0, 0, 0, 0, 0);
 
 INSERT INTO Interpretaciones VALUES(1,"Considerado y dispuesto","lalalala",1,1);
 INSERT INTO Interpretaciones VALUES(2,"Sumiso y servicial","lalalala",2,1);

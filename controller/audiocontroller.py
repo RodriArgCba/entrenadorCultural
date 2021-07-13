@@ -41,12 +41,14 @@ def contarpalabras():
             try:
                 texto = contador.recognizer.recognize_google(audio, language='es')
                 contador.nrocaptura = contador.nrocaptura + 1
-                contador.acumulado = contador.acumulado + (len(texto.split(" ")) / duracion)
+                contador.acumulado = contador.acumulado + len(texto.split(" "))
                 contador.duracionacumulada = contador.duracionacumulada + duracion
                 logging.info(texto)
+                logging.info("tiempo: " + str(duracion))
+                logging.info(len(texto.split(" ")) / duracion)
                 from controller.controladorprincipal import ControladorPrincipal
                 ControladorPrincipal().printtochatbox(texto)
-                logging.info(len(texto.split(" ")) / duracion)
+
             except sr.UnknownValueError:
                 print("No pasa nada")
 

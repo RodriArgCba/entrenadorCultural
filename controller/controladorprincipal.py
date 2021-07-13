@@ -1,5 +1,6 @@
 import threading
 import kivy
+from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager
 from kivymd.app import MDApp
 
@@ -38,7 +39,7 @@ class ControladorPrincipal(object):
                     cls._instance.threadsonido = threading.Thread(target=updatesound, args=(), daemon=True)
                     cls._instance.threadcontadorpalabras = threading.Thread(target=contarpalabras, args=(), daemon=True)
                     cls._instance.threadgestos = threading.Thread(target=updategesture, args=(), daemon=True)
-                    cls._instance.simulacion = Simulacion()
+                    cls._instance.simulacion = None
         return cls._instance
 
     def logearusuario(self):
@@ -49,9 +50,16 @@ class ControladorPrincipal(object):
 
     def iniciarsimulacion(self):
         if (self.culturaseleccionada is not None) and (self.conversacionseleccionada is not None):
+            self.simulacion = Simulacion()
             self.iteradordefase = iter(self.conversacionseleccionada.fases)
             self.faseactual = next(self.iteradordefase)
-            self.pantallasimulacion = SimulacionScreen(name="simulacion")
+            app = MDApp.get_running_app()
+            if app.root.has_screen("simulacion"):
+                self.pantallasimulacion = app.root.get_screen("simulacion")
+                self.pantallasimulacion.restart_screen()
+            else:
+                self.pantallasimulacion = SimulacionScreen(name="simulacion")
+                app.root.add_widget(self.pantallasimulacion)
             self.pantallasimulacion.establecerfase(self.faseactual)
             CamaraController().killthread = False
             self.threadcamara.start()
@@ -60,12 +68,18 @@ class ControladorPrincipal(object):
             self.threadsonido.start()
             ContadorDePalabras().killthread = False
             self.threadcontadorpalabras.start()
-            app = MDApp.get_running_app()
-            app.root.add_widget(self.pantallasimulacion)
+
             app.root.current = 'simulacion'
             self.simulacion.conversacion = self.conversacionseleccionada
+            self.nohaymasfases = False
+            Clock.schedule_interval(self.simulacionupdate, 5.0)
         else:
             raise Exception("Se intentó iniciar simulación sin haber seleccionado una cultura y/o conversación")
+
+    def simulacionupdate(self, dt):
+        if self.nohaymasfases:
+            self.finalizarsimulacion()
+            return False
 
     def avanzarfase(self):
         captura = Captura()
@@ -85,7 +99,7 @@ class ControladorPrincipal(object):
             self.faseactual = next(self.iteradordefase)
             self.pantallasimulacion.establecerfase(self.faseactual)
         except:
-            self.finalizarsimulacion()
+            self.nohaymasfases = True
 
     def interpretarcapturas(self):
         resultados = self.simulacion.resultados
@@ -93,33 +107,26 @@ class ControladorPrincipal(object):
             linearesultado.interpretacion = self.culturaseleccionada.interpretar(linearesultado.captura)
         self.simulacion.limpiarresultados()
         self.simulacion.resultados = resultados
+        self.simulacion.calcularcalificacion()
 
     def verhistorialusuario(self):
         app = MDApp.get_running_app()
-        screenexists = False
-        for child in app.root.children:
-            if child.name == 'historialusuario':
-                screenexists = True
-                historialscreen = child
-        if not screenexists:
-            app.root.add_widget(HistorialDeUsuario(obtenerhistorialdeusuario(), name="historialusuario"))
-        else:
+        if app.root.has_screen("historialusuario"):
+            historialscreen = app.root.get_screen("historialusuario")
             historialscreen.updatedata(obtenerhistorialdeusuario())
+        else:
+            app.root.add_widget(HistorialDeUsuario(obtenerhistorialdeusuario(), name="historialusuario"))
         app.root.current = 'historialusuario'
 
     def detallesdesimulacion(self, simulacion: Simulacion):
         app = MDApp.get_running_app()
-        screenexists = False
-        for child in app.root.children:
-            if child.name == 'resultado':
-                screenexists = True
-                resultadoscreen = child
-        if not screenexists:
+        if app.root.has_screen("resultado"):
+            resultadoscreen = app.root.get_screen("resultado")
+            resultadoscreen.updatedata(simulacion)
+        else:
             resultadoscreen = ResultadoScreen(simulacion, name="resultado")
             app.root.add_widget(resultadoscreen)
-        else:
-            resultadoscreen.updatedata(simulacion)
-        resultadoscreen.resultadosscreenlayout.guardarsimulacionalsalir = False
+        resultadoscreen.layout.guardarsimulacionalsalir = False
         app.root.current = 'resultado'
 
     def listarhistorialtodoslosusuarios(self):
@@ -139,10 +146,24 @@ class ControladorPrincipal(object):
         CamaraController().killthread = True
         AudioController().killthread = True
         ContadorDePalabras().killthread = True
+        self.resetthreads()
         self.interpretarcapturas()
+        self.pantallasimulacion.layout.simulacionfinalizada = True
         app = MDApp.get_running_app()
-        app.root.add_widget(ResultadoScreen(self.simulacion, name="resultado"))
+        if app.root.has_screen("resultado"):
+            resultadoscreen = app.root.get_screen("resultado")
+            resultadoscreen.updatedata(self.simulacion)
+        else:
+            resultadoscreen = ResultadoScreen(self.simulacion, name="resultado")
+            app.root.add_widget(resultadoscreen)
+        resultadoscreen.layout.guardarsimulacionalsalir = True
         app.root.current = 'resultado'
+
+    def resetthreads(self):
+        self.threadcamara = threading.Thread(target=updateimage, args=(), daemon=True)
+        self.threadsonido = threading.Thread(target=updatesound, args=(), daemon=True)
+        self.threadcontadorpalabras = threading.Thread(target=contarpalabras, args=(), daemon=True)
+        self.threadgestos = threading.Thread(target=updategesture, args=(), daemon=True)
 
     def guardarsimulacion(self):
         guardarresultado(self.simulacion)

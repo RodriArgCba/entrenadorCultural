@@ -82,7 +82,7 @@ class Captura(object):
 
     def comparar(self, captura):
         # Comparando volúmen de voz
-        if not ((self.volumendevoz - 300) <= captura.volumendevoz <= (self.volumendevoz + 300)):
+        if not ((self.volumendevoz - 15) <= captura.volumendevoz <= (self.volumendevoz + 15)):
             return False
         # Comparando velocidad del hábla
         if not ((self.palabrasporsegundo - 0.5) <= captura.palabrasporsegundo <= (self.palabrasporsegundo + 0.5)):
@@ -100,3 +100,25 @@ class Captura(object):
         if not ((self.cabeza == MovimientoCabeza.NOAPLICA) or (self.cabeza == captura.cabeza)):
             return False
         return True
+
+    def similitud(self, captura):
+        result = 0.0
+        # Comparando volúmen de voz
+        if (self.volumendevoz - 300) <= captura.volumendevoz <= (self.volumendevoz + 300):
+            result += 1 / 6
+        # Comparando velocidad del hábla
+        if (self.palabrasporsegundo - 0.5) <= captura.palabrasporsegundo <= (self.palabrasporsegundo + 0.5):
+            result += 1 / 6
+        # Comparando posición de brazos
+        if (self.posicionbrazos == PosicionBrazos.NOAPLICA) or (self.posicionbrazos == captura.posicionbrazos):
+            result += 1 / 6
+        # Comparando dirección de la mirada
+        if (self.mirada == DireccionMirada.NOAPLICA) or (self.mirada == captura.mirada):
+            result += 1 / 6
+        # Comparando rostro
+        if (self.rostro == Rostro.NOAPLICA) or (self.rostro == captura.rostro):
+            result += 1 / 6
+        # Comparando movimiento de la cabeza
+        if (self.cabeza == MovimientoCabeza.NOAPLICA) or (self.cabeza == captura.cabeza):
+            result += 1 / 6
+        return result

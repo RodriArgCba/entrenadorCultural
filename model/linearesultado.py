@@ -41,3 +41,6 @@ class LineaResultado(object):
     fase = property(_get_fase, _set_fase)
     captura = property(_get_captura, _set_captura)
     interpretacion = property(_get_interpretacion, _set_interpretacion)
+
+    def precisiondeusuario(self):
+        return self.fase.capturaesperada.similitud(self.captura)

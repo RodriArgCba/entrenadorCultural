@@ -34,9 +34,9 @@ class Simulacion(object):
     def _set_calificaciondeusuario(self, value):
         if not isinstance(value, int):
             raise TypeError("calificacion debe ser un int")
-        elif value > 1 or value < 0:
+        elif value > 100 or value < 0:
             raise TypeError("calificacion debe ser un int entre 0 y 1")
-        self.__calificaciondeusuario= value
+        self.__calificaciondeusuario = value
 
     def _get_resultados(self):
         return copy.deepcopy(self.__resultados)
@@ -50,10 +50,19 @@ class Simulacion(object):
         else:
             raise Exception("El elemento no es un Resultado")
 
-    resultados = property(_get_resultados,_set_resultados)
-    calificaciondeusuario = property(_get_calificaciondeusuario,_set_calificaciondeusuario)
-    conversacion = property(_get_conversacion,_set_conversacion)
-    fecha = property(_get_fecha,_set_fecha)
+    resultados = property(_get_resultados, _set_resultados)
+    calificaciondeusuario = property(_get_calificaciondeusuario, _set_calificaciondeusuario)
+    conversacion = property(_get_conversacion, _set_conversacion)
+    fecha = property(_get_fecha, _set_fecha)
 
     def limpiarresultados(self):
         self.__resultados = []
+
+    def calcularcalificacion(self):
+        acumulado = 0.0
+        contador = 0
+        for resultado in self.__resultados:
+            acumulado += resultado.precisiondeusuario()
+            contador += 1
+        calificacion = (acumulado / contador) * 100
+        self.calificaciondeusuario = int(calificacion)
