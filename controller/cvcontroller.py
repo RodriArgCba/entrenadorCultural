@@ -2,6 +2,7 @@ import threading
 import time
 import math
 import cv2
+import logging
 import face_recognition
 import numpy as np
 from kivy.graphics.texture import Texture
@@ -22,8 +23,8 @@ class CamaraController(object):
                     cls._instance = super(CamaraController, cls).__new__(cls)
                     cls._instance.net = cv2.dnn.readNetFromTensorflow("assets/graph_opt.pb")
                     cls._instance.facemodel = load_model("./assets/model_v6_23.hdf5")
-                    cls._instance.inWidth = 250
-                    cls._instance.inHeight = 250
+                    cls._instance.inWidth = 400
+                    cls._instance.inHeight = 400
                     cls._instance.thr = 0.2
                     cls._instance.BODY_PARTS = {"Nose": 0, "Neck": 1, "RShoulder": 2, "RElbow": 3, "RWrist": 4,
                                                 "LShoulder": 5, "LElbow": 6, "LWrist": 7, "RHip": 8, "RKnee": 9,
@@ -69,7 +70,7 @@ class CamaraController(object):
 
 def updategesture():
     camaracontroller = CamaraController()
-    emotion_dict = {0: Rostro.IRRITADO, 5: Rostro.PREOCUPADO, 4: Rostro.SERIO, 1: Rostro.IRRITADO, 6: Rostro.SONRIENDO, 2: Rostro.PREOCUPADO, 3: Rostro.SONRIENDO}
+    emotion_dict = {0: Rostro.PREOCUPADO, 5: Rostro.SONRIENDO, 4: Rostro.SONRIENDO, 1: Rostro.SONRIENDO, 6: Rostro.SERIO, 2: Rostro.SERIO, 3: Rostro.SONRIENDO}
     while (not camaracontroller.killthread):
         hasFrame, frame = camaracontroller.cap.read()
         if not hasFrame:
@@ -83,11 +84,12 @@ def updategesture():
             face_image = np.reshape(face_image, [1, face_image.shape[0], face_image.shape[1], 1])
             prediction = camaracontroller.facemodel.predict(face_image)
             predicted_class = np.argmax(prediction)
+            logging.info(str(predicted_class))
             label_map = dict((v, k) for v, k in emotion_dict.items())
             predicted_label = label_map[predicted_class]
             camaracontroller.gesture = predicted_label
             print(predicted_label)
-        time.sleep(5)
+        time.sleep(3)
 
 
 def updateimage():
@@ -147,10 +149,10 @@ def updateimage():
             else:
                 camaracontroller.pose = PosicionBrazos.NEUTRALES
                 ti = time.time()
-            print("Distancia entre brazos:")
-            print(distanciabrazos)
-            print("Distancia hombro cuello:")
-            print(distanciahombrocuello)
+            #print("Distancia entre brazos:")
+            #print(distanciabrazos)
+            #print("Distancia hombro cuello:")
+            #print(distanciahombrocuello)
         #Aquí comienza el código para dibujar los puntos y lineas en la imàgen
         for pair in camaracontroller.POSE_PAIRS:
             partFrom = pair[0]

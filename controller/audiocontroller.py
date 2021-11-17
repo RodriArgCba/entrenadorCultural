@@ -46,6 +46,7 @@ def contarpalabras():
                 logging.info(texto)
                 logging.info("tiempo: " + str(duracion))
                 logging.info(len(texto.split(" ")) / duracion)
+                logging.info("Volumen: " + str(AudioController._instance.volumenpromedio))
                 from controller.controladorprincipal import ControladorPrincipal
                 ControladorPrincipal().printtochatbox(texto)
 
