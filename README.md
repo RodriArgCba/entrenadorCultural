@@ -12,5 +12,6 @@ Palabras claves: comunicación no verbal, aprendizaje cultural, inteligencia art
 Instrucciones para modificar el proyecto:
 
 1) Es necesario Python 3.7.9 para correr el proyecto, se recomienda crear un entorno virtual
-2) Correr la instalación en el entorno virtual de las librerias especificadas en "requirements.txt"
-3) Instalar PyAudio manualmente corriendo "pip install [Directorio del proyecto]/assets/PyAudio-0.2.11-cp37-cp37m-win_amd64.whl" 
+2) Correr "pip install -r [Directorio del proyecto]/requirements.txt" para realizar la instalación en el entorno virtual de las librerias necesarias
+3) Instalar PyAudio manualmente corriendo "pip install [Directorio del proyecto]/assets/PyAudio-0.2.11-cp37-cp37m-win_amd64.whl"
+4) Ejecutar el código sql [Directorio del proyecto]/controller/dbinit.sql sobre [Directorio del proyecto]/sqlitedb.db para cargar los datos iniciales
