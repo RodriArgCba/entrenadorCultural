@@ -44,4 +44,5 @@ class CulturaObjetivo(object):
         for interpretacion in self.interpretaciones:
             if interpretacion.captura.comparar(captura):
                 return interpretacion
-        raise Exception("No se encontraron coincidencias")
+        interpretacion = Interpretacion("ERROR", "No se pudo interpretar", Captura())
+        return interpretacion

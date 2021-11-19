@@ -43,7 +43,7 @@ def conversacionesdecultura(cultura: CulturaObjetivo):
     cursorObj.execute(f"SELECT * FROM Conversaciones WHERE CulturaObjetivoId={cultura.id}")
     resultados = []
     for x in cursorObj.fetchall():
-        conversacion = Conversacion(x[1], x[2], x[3], cultura, x[5])
+        conversacion = Conversacion(x[1], x[2], float(x[3]), cultura, x[5])
         conversacion.id = x[0]
         conversacion.fases = fasesdeconversacion(conversacion)
         resultados.append(conversacion)
@@ -99,7 +99,7 @@ def obtenerhistorialdeusuario():
         idsimulacion = x[0]
         cursorObj.execute(f"SELECT * From Conversaciones WHERE ConversacionId={x[2]}")
         y = cursorObj.fetchone()
-        conversacion = Conversacion(y[1], y[2], y[3], None, y[5])
+        conversacion = Conversacion(y[1], y[2], float(y[3]), None, y[5])
         conversacion.id = x[2]
         conversacion.fases = fasesdeconversacion(conversacion)
         cursorObj.execute(f"SELECT * From CulturasObjetivo WHERE CulturaObjetivoId={y[4]}")
