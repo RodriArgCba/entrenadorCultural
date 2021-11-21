@@ -21,10 +21,11 @@ def allculturas():
     cursorObj.execute("SELECT * FROM CulturasObjetivo")
     resultados = []
     for x in cursorObj.fetchall():
-        cultura = CulturaObjetivo(x[1], x[2])
-        cultura.id = x[0]
-        cultura.interpretaciones = interpretacionesDeCultura(cultura)
-        resultados.append(cultura)
+        if x[0] != 0:
+            cultura = CulturaObjetivo(x[1], x[2])
+            cultura.id = x[0]
+            cultura.interpretaciones = interpretacionesDeCultura(cultura)
+            resultados.append(cultura)
     return resultados
 
 

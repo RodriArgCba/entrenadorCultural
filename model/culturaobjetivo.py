@@ -1,4 +1,5 @@
 from model.interpretacion import Interpretacion
+from model.captura import Captura
 import copy
 
 
@@ -44,5 +45,8 @@ class CulturaObjetivo(object):
         for interpretacion in self.interpretaciones:
             if interpretacion.captura.comparar(captura):
                 return interpretacion
-        interpretacion = Interpretacion("ERROR", "No se pudo interpretar", Captura())
+        capturavacia = Captura()
+        capturavacia.id = 0
+        interpretacion = Interpretacion("ERROR", "No se pudo interpretar", capturavacia)
+        interpretacion.id = 0
         return interpretacion
