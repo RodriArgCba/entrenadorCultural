@@ -12,13 +12,14 @@ from controller.cvcontroller import CamaraController
 from model.rostro import Rostro
 from view.widgetsmethods import WidgetCreator
 from view.selectordeiconos import SelectorDeIconos
+from kivymd.uix.label import MDLabel as Label
 
 camaracontroller = CamaraController()
 miccontroller = AudioController()
 backgroundColor = '6A3192'
 subdivisionColor = [1, 1, 1]
-botmessagebubblecolor = [240/255, 240/255, 240/255]
-usermessagebubblecolor = [230/255, 245/255, 255/255]
+botmessagebubblecolor = [240 / 255, 240 / 255, 240 / 255]
+usermessagebubblecolor = [230 / 255, 245 / 255, 255 / 255]
 chatboxpadding = [10, 10, 10, 10]
 
 
@@ -45,7 +46,9 @@ class SimulacionScreen(Screen):
 
     def imprimiralchatbox(self, texto):
         new_box = MDBoxLayout(size_hint=(0.8, None), orientation='horizontal', height=50, pos_hint={'x': 0.2})
-        new_box.add_widget(WidgetCreator.newlabel(texto, valign='middle', halign='right', size_hint=(1.0, None)))
+        new_box.text = WidgetCreator.newlabel(texto, valign='middle', halign='right', size_hint=(1.0, 1.0))
+        new_box.add_widget(new_box.text)
+        new_box.size = new_box.text.size
         with new_box.canvas.before:
             Color(usermessagebubblecolor[0], usermessagebubblecolor[1], usermessagebubblecolor[2])
             new_box.rect = RoundedRectangle(size=new_box.size, pos=new_box.pos, radius=[25, 0, 25, 25])
@@ -69,6 +72,7 @@ class SimulacionScreenLayout(BoxLayout):
         self.soundwave = FigureCanvasKivyAgg(AudioController().fig)
         self.userinputbox = UserInputBox(self.camara, self.soundwave, padding=[10, 10, 10, 10], spacing=10)
         self.add_widget(self.userinputbox)
+        self.add_widget(SimulacionScreenLowerButtonRow(size_hint=(1.0, None), height=30))
         self.simulacionfinalizada = False
         Clock.schedule_interval(self.update, 1.0 / 30.0)
 
@@ -137,3 +141,36 @@ class UserInputBox(BoxLayout):
         rightdownbox.add_widget(self.rostrolabel)
         rightbox.add_widget(rightdownbox)
         self.add_widget(rightbox)
+
+
+class SimulacionScreenLowerButtonRow(BoxLayout):
+    def __init__(self, **kwargs):
+        super(SimulacionScreenLowerButtonRow, self).__init__(**kwargs)
+        self.orientation = 'horizontal'
+        btn1 = WidgetCreator.newiconbutton("close", "Error")
+        btn1.bind(on_press=self.callback_cancelar)
+        btn2 = WidgetCreator.newiconbutton("pause")
+        btn2.bind(on_press=self.callback_pausar)
+        btn3 = WidgetCreator.newiconbutton("skip-next")
+        btn3.bind(on_press=self.callback_adelantar)
+        self.add_widget(btn1)
+        self.add_widget(btn2)
+        self.add_widget(btn3)
+
+    def callback_cancelar(self, obj):
+        print("Boton cancelar")
+        from controller.controladorprincipal import ControladorPrincipal
+        ControladorPrincipal().cancelarsimulacion()
+
+    def callback_pausar(self, obj):
+        print("Boton Pausar")
+        from controller.controladorprincipal import ControladorPrincipal
+        if ControladorPrincipal().pausardespausarsimulacion():
+            obj.icon = 'play'
+        else:
+            obj.icon = 'pause'
+
+    def callback_adelantar(self, obj):
+        print("Boton forzar resultado")
+        from controller.controladorprincipal import ControladorPrincipal
+        ControladorPrincipal().avanzarfase()

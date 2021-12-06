@@ -4,7 +4,7 @@ from kivy.utils import get_color_from_hex as getcolor
 from kivy.factory import Factory
 from kivy.uix.image import Image
 from kivymd.uix.boxlayout import MDBoxLayout as BoxLayout
-from kivymd.uix.button import MDTextButton as Button
+from kivymd.uix.button import MDTextButton as Button, MDIconButton as IconButton
 
 textColor = '000000'
 spinnerBackColor = 'e0e0e0'
@@ -96,6 +96,16 @@ class WidgetCreator:
             valign='middle',
         )
         button.bind(size=button.setter('text_size'))
+        return button
+
+    @staticmethod
+    def newiconbutton(text, color="Primary"):
+        button = IconButton(
+            height=44,
+            size_hint=(0.7, None),
+            icon=text,
+            theme_text_color=color
+        )
         return button
 
     @staticmethod

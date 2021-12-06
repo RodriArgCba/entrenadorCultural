@@ -56,7 +56,7 @@ class MenuPrincipalLayout(BoxLayout):
         ))
         # Llenar pantalla hacia abajo
         self.add_widget(Label(size_hint=(1.0, 1.0)))
-        self.add_widget(LowerButtonsRow())
+        self.add_widget(MenuPrincipalLowerButtonsRow())
 
     def callback_spinner_culturas(self, obj, value):
         cultura = None
@@ -92,9 +92,9 @@ class MenuPrincipalLayout(BoxLayout):
             raise Exception("Valor de conversacion incorrecto")
 
 
-class LowerButtonsRow(BoxLayout):
+class MenuPrincipalLowerButtonsRow(BoxLayout):
     def __init__(self, **kwargs):
-        super(LowerButtonsRow, self).__init__(**kwargs)
+        super(MenuPrincipalLowerButtonsRow, self).__init__(**kwargs)
         self.orientation = 'horizontal'
         btn1 = WidgetCreator.newbutton("Iniciar conversación")
         btn1.bind(on_press=self.callback_iniciarconversacion)

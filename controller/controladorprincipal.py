@@ -76,15 +76,33 @@ class ControladorPrincipal(object):
         else:
             raise Exception("Se intentó iniciar simulación sin haber seleccionado una cultura y/o conversación")
 
+    def pausardespausarsimulacion(self):
+        contador = ContadorDePalabras()
+        contador.paused = not contador.paused
+        return contador.paused
+
+    def cancelarsimulacion(self):
+        CamaraController().killthread = True
+        AudioController().killthread = True
+        ContadorDePalabras().killthread = True
+        self.resetthreads()
+        self.pantallasimulacion.layout.simulacionfinalizada = True
+        self.volveramenu()
+
     def simulacionupdate(self, dt):
         if self.nohaymasfases:
             self.finalizarsimulacion()
             return False
 
     def avanzarfase(self):
+        if self.pantallasimulacion.layout.simulacionfinalizada:
+            return
         captura = Captura()
         contadordepalabras = ContadorDePalabras()
-        captura.palabrasporsegundo = contadordepalabras.acumulado / contadordepalabras.duracionacumulada
+        if contadordepalabras.duracionacumulada != 0:
+            captura.palabrasporsegundo = contadordepalabras.acumulado / contadordepalabras.duracionacumulada
+        else:
+            captura.palabrasporsegundo = 0.0
         contadordepalabras.resetearcuenta()
         audiocontroller = AudioController()
         captura.volumendevoz = audiocontroller.volumenpromedio

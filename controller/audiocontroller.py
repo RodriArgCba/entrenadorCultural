@@ -22,6 +22,7 @@ class ContadorDePalabras(object):
                     cls._instance.nrocaptura = 0
                     cls._instance.acumulado = 0
                     cls._instance.duracionacumulada = 0
+                    cls._instance.paused = False
                     cls._instance.killthread = True
         return cls._instance
 
@@ -51,7 +52,7 @@ def contarpalabras():
                 ControladorPrincipal().printtochatbox(texto)
 
             except sr.UnknownValueError:
-                print("No pasa nada")
+                print("No se pudo contar las palabras o conectarse con google")
 
 
 class AudioController(object):
