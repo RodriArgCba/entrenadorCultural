@@ -2,7 +2,6 @@
 **/desktop.ini
 **/__pycache__
 .idea/
-assets/
 Python37/
 sqlitedb.db
 oldvenv.zip
