@@ -41,6 +41,7 @@ class ForzarResultadoController(Widget):
     def forzarresultado(self, idsimulacion):
         from controller.controladorprincipal import ControladorPrincipal
         simulacion = simulacionporid(idsimulacion)
+        simulacion.calcularcalificacion()
         controladorprincipal = ControladorPrincipal()
         if hasattr(controladorprincipal, 'pantallasimulacion'):
             if not controladorprincipal.pantallasimulacion.layout.simulacionfinalizada:
