@@ -3,5 +3,4 @@
 **/__pycache__
 .idea/
 Python37/
-sqlitedb.db
 oldvenv.zip

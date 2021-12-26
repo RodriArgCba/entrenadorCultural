@@ -97,24 +97,35 @@ def obtenerhistorialdeusuario():
     cursorObj.execute("SELECT * FROM Simulaciones")
     resultados = []
     for x in cursorObj.fetchall():
-        idsimulacion = x[0]
-        cursorObj.execute(f"SELECT * From Conversaciones WHERE ConversacionId={x[2]}")
-        y = cursorObj.fetchone()
-        conversacion = Conversacion(y[1], y[2], float(y[3]), None, y[5])
-        conversacion.id = x[2]
-        conversacion.fases = fasesdeconversacion(conversacion)
-        cursorObj.execute(f"SELECT * From CulturasObjetivo WHERE CulturaObjetivoId={y[4]}")
-        z = cursorObj.fetchone()
-        cultura = CulturaObjetivo(z[1], z[2])
-        cultura.id = z[0]
-        cultura.interpretaciones = interpretacionesDeCultura(cultura)
-        conversacion.culturaobjetivo = cultura
-        simulacion = Simulacion(x[1], conversacion, x[4])
-        simulacion.id = idsimulacion
-        simulacion.resultados = obtenerlineasderesultado(idsimulacion)
+        simulacion = Simulacion(x[1], conversacionporid(x[2]) ,x[4])
+        simulacion.id = x[0]
+        simulacion.resultados = obtenerlineasderesultado(x[0])
         resultados.append(simulacion)
     return resultados
 
+def simulacionporid(idsimulacion):
+    cursorObj.execute(f"SELECT * FROM Simulaciones WHERE SimulacionId={idsimulacion}")
+    x = cursorObj.fetchone()
+    simulacion = Simulacion(x[1], conversacionporid(x[2]) ,x[4])
+    simulacion.id = idsimulacion
+    simulacion.resultados = obtenerlineasderesultado(idsimulacion)
+    return simulacion
+
+def conversacionporid(idconversacion):
+    cursorObj.execute(f"SELECT * From Conversaciones WHERE ConversacionId={idconversacion}")
+    x = cursorObj.fetchone()
+    conversacion = Conversacion(x[1], x[2], float(x[3]), culturaobjectivoporid(x[4]), x[5])
+    conversacion.id = idconversacion
+    conversacion.fases = fasesdeconversacion(conversacion)
+    return conversacion
+
+def culturaobjectivoporid(idculturaobjetivo):
+    cursorObj.execute(f"SELECT * From CulturasObjetivo WHERE CulturaObjetivoId={idculturaobjetivo}")
+    x = cursorObj.fetchone()
+    cultura = CulturaObjetivo(x[1], x[2])
+    cultura.id = idculturaobjetivo
+    cultura.interpretaciones = interpretacionesDeCultura(cultura)
+    return cultura
 
 def obtenerlineasderesultado(idsimulacion):
     cursorObj.execute(f"SELECT * FROM LineasDeResultado WHERE SimulacionId={idsimulacion}")
