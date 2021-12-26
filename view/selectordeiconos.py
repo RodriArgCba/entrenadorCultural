@@ -74,18 +74,18 @@ class SelectorDeIconos:
 
     @staticmethod
     def iconodevolumen(volumen):
-        if volumen <= 35:
+        if volumen <= 28:
             return selectordevolumen.get("bajo")
-        elif 35 < volumen <= 60:
+        elif 28 < volumen <= 35:
             return selectordevolumen.get("medio")
         else:
             return selectordevolumen.get("alto")
 
     @staticmethod
     def iconodevelocidad(velocidad):
-        if velocidad <= 0.8:
+        if velocidad <= 1.1:
             return selectordevelocidad.get("lento")
-        elif 0.8 < velocidad <= 1.6:
+        elif 1.1 < velocidad <= 1.99:
             return selectordevelocidad.get("medio")
         else:
             return selectordevelocidad.get("rapido")
