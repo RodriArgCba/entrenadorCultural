@@ -19,7 +19,7 @@ Kivy-Garden==0.1.4
 kivymd==0.104.1
 kiwisolver==1.3.1
 matplotlib==3.1.3
-numpy==1.19.4
+numpy
 opencv-contrib-python==4.4.0.46
 Pillow==8.0.1
 ../../assets/PyAudio-0.2.11-cp37-cp37m-win_amd64.whl
