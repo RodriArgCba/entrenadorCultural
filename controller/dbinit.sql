@@ -19,8 +19,8 @@ CREATE TABLE IF NOT EXISTS "Conversaciones" (
 	"Duracion"	NUMERIC(100, 40) NOT NULL,
 	"CulturaObjetivoId"	INTEGER NOT NULL,
 	"UbicacionMP3"	TEXT NOT NULL,
-	FOREIGN KEY("CulturaObjetivoId") REFERENCES "CulturasObjetivo"("CulturaObjetivoId") ON DELETE NO ACTION ON UPDATE NO ACTION,
-	PRIMARY KEY("ConversacionId")
+	PRIMARY KEY("ConversacionId"),
+	FOREIGN KEY("CulturaObjetivoId") REFERENCES "CulturasObjetivo"("CulturaObjetivoId") ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 CREATE TABLE IF NOT EXISTS "Simulaciones" (
 	"SimulacionId"	INTEGER,
@@ -28,9 +28,9 @@ CREATE TABLE IF NOT EXISTS "Simulaciones" (
 	"ConversacionId"	INTEGER NOT NULL,
 	"UsuarioId"	INTEGER NOT NULL,
 	"CalificacionDeUsuario"	INTEGER NOT NULL,
-	FOREIGN KEY("ConversacionId") REFERENCES "Conversaciones"("ConversacionId") ON DELETE NO ACTION ON UPDATE NO ACTION,
+	PRIMARY KEY("SimulacionId"),
 	FOREIGN KEY("UsuarioId") REFERENCES "Usuarios"("UsuarioId") ON DELETE NO ACTION ON UPDATE NO ACTION,
-	PRIMARY KEY("SimulacionId")
+	FOREIGN KEY("ConversacionId") REFERENCES "Conversaciones"("ConversacionId") ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 CREATE TABLE IF NOT EXISTS "Capturas" (
 	"CapturaId"	INTEGER,
@@ -51,9 +51,9 @@ CREATE TABLE IF NOT EXISTS "Fases" (
 	"Texto"	TEXT NOT NULL,
 	"CapturaEsperadaId"	INTEGER NOT NULL,
 	"ConversacionId"	INTEGER NOT NULL,
-	FOREIGN KEY("CapturaEsperadaId") REFERENCES "Capturas"("CapturaId") ON DELETE NO ACTION ON UPDATE NO ACTION,
+	PRIMARY KEY("FaseId"),
 	FOREIGN KEY("ConversacionId") REFERENCES "Conversaciones"("ConversacionId") ON DELETE NO ACTION ON UPDATE NO ACTION,
-	PRIMARY KEY("FaseId")
+	FOREIGN KEY("CapturaEsperadaId") REFERENCES "Capturas"("CapturaId") ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 CREATE TABLE IF NOT EXISTS "Interpretaciones" (
 	"InterpretacionId"	INTEGER,
@@ -61,9 +61,9 @@ CREATE TABLE IF NOT EXISTS "Interpretaciones" (
 	"MasInfo"	TEXT NOT NULL,
 	"CapturaId"	INTEGER NOT NULL,
 	"CulturaObjetivoId"	INTEGER NOT NULL,
+	PRIMARY KEY("InterpretacionId"),
 	FOREIGN KEY("CapturaId") REFERENCES "Capturas"("CapturaId") ON DELETE NO ACTION ON UPDATE NO ACTION,
-	FOREIGN KEY("CulturaObjetivoId") REFERENCES "CulturasObjetivo"("CulturaObjetivoId") ON DELETE NO ACTION ON UPDATE NO ACTION,
-	PRIMARY KEY("InterpretacionId")
+	FOREIGN KEY("CulturaObjetivoId") REFERENCES "CulturasObjetivo"("CulturaObjetivoId") ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 CREATE TABLE IF NOT EXISTS "LineasDeResultado" (
 	"LineaDeResultadoId"	INTEGER,
@@ -71,10 +71,10 @@ CREATE TABLE IF NOT EXISTS "LineasDeResultado" (
 	"CapturaId"	INTEGER NOT NULL,
 	"InterpretacionId"	INTEGER NOT NULL,
 	"SimulacionId"	INTEGER NOT NULL,
-	FOREIGN KEY("InterpretacionId") REFERENCES "Interpretaciones"("InterpretacionId") ON DELETE NO ACTION ON UPDATE NO ACTION,
-	FOREIGN KEY("FaseId") REFERENCES "Fases"("FaseId") ON DELETE NO ACTION ON UPDATE NO ACTION,
+	PRIMARY KEY("LineaDeResultadoId"),
 	FOREIGN KEY("SimulacionId") REFERENCES "Simulaciones"("SimulacionId") ON DELETE NO ACTION ON UPDATE NO ACTION,
-	PRIMARY KEY("LineaDeResultadoId")
+	FOREIGN KEY("FaseId") REFERENCES "Fases"("FaseId") ON DELETE NO ACTION ON UPDATE NO ACTION,
+	FOREIGN KEY("InterpretacionId") REFERENCES "Interpretaciones"("InterpretacionId") ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 INSERT INTO "Usuarios" VALUES (1,'Rodrigo Banno','rodribanno@gmail.com',0);
 INSERT INTO "CulturasObjetivo" VALUES (0,'NO','NO');
@@ -83,8 +83,8 @@ INSERT INTO "CulturasObjetivo" VALUES (2,'Latinoamericana','La cultura latinoame
 INSERT INTO "Conversaciones" VALUES (1,'Prestando servicio técnico','Tienes que atender el reclamo o consulta de un cliente de Japón. ¿Cómo te desenvolverás?',500,1,'assets/JAPONServicioAlCliente.mp3');
 INSERT INTO "Conversaciones" VALUES (2,'Prestando servicio al cliente','Tienes que atender el reclamo o consulta de un cliente latinoamericano. ¿Cómo te desenvolverás?',500,2,'assets/LATINOAMERICAServicioAlCliente.mp3');
 INSERT INTO "Capturas" VALUES (0,0,0,0,0,0,0);
-INSERT INTO "Capturas" VALUES (1,46,1.8,0,0,1,0);
-INSERT INTO "Capturas" VALUES (2,20,1,0,0,4,0);
+INSERT INTO "Capturas" VALUES (1,31,1.8,0,0,1,0);
+INSERT INTO "Capturas" VALUES (2,26,1,0,0,4,0);
 INSERT INTO "Capturas" VALUES (3,0,0,1,0,2,0);
 INSERT INTO "Fases" VALUES (1,'Presentación','Saludo cordial y presentarse',0,50,'Buenos dias, gracias por atender mi reclamo.',2,1);
 INSERT INTO "Fases" VALUES (2,'Respondiendo la consulta','Resolviendo problemas del cliente',50,350,'Ultimamente la maquinaria que adquirimos de su empresa ha estado dando muchos problemas. Los tractores se paran sin motivo 3 veces por dia, son muy ruidosos y están generando olor a quemado de manera constante... ¿Cuál puede ser el problema?',2,1);
