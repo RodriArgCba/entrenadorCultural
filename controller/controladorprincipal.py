@@ -158,7 +158,8 @@ class ControladorPrincipal(object):
 
     def printtochatbox(self, texto):
         self.pantallasimulacion.imprimiralchatbox(texto)
-        self.avanzarfase()
+        if not ContadorDePalabras().paused:
+            self.avanzarfase()
 
     def finalizarsimulacion(self):
         CamaraController().killthread = True
